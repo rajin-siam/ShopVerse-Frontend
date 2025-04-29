@@ -15,18 +15,30 @@ const ProductsPage = () => {
       <CategoryFilter onCategorySelect={setSelectedCategory} />
 
       <div className="flex justify-between mb-4">
-        <button onClick={() => setView("grid")} className="bg-blue-500 text-white px-4 py-2 rounded-md">
+        <button
+          onClick={() => setView("grid")}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+        >
           Grid View
         </button>
-        <button onClick={() => setView("list")} className="bg-blue-500 text-white px-4 py-2 rounded-md">
+        <button
+          onClick={() => setView("list")}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+        >
           List View
         </button>
       </div>
 
       {view === "grid" ? (
-        <ProductGrid searchQuery={searchQuery} selectedCategoryId={selectedCategory}/>
+        <ProductGrid
+          searchQuery={searchQuery}
+          selectedCategoryId={selectedCategory}
+        />
       ) : (
-        <ProductList searchQuery={searchQuery} selectedCategoryId={selectedCategory} />
+        <ProductList
+          searchQuery={searchQuery}
+          selectedCategoryId={selectedCategory}
+        />
       )}
     </div>
   );

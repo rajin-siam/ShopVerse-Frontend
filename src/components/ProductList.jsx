@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { fetchAllProducts, fetchProductsByKeyword } from "./../api/productsApi";
+import {
+  fetchAllProducts,
+  fetchProductsByKeyword,
+  fetchProductsByCategoryId,
+} from "./../api/productsApi";
 import Product from "./Product";
 import Pagination from "./Pagination";
 
-const ProductList = ({ searchQuery }) => {
-  // Accept searchQuery as a prop
+const ProductList = ({ searchQuery, selectedCategoryId }) => {
   const [products, setProducts] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -13,8 +16,9 @@ const ProductList = ({ searchQuery }) => {
     const loadProducts = async () => {
       try {
         let data;
+
         if (searchQuery) {
-          // If there's a search query, use fetchProductsByKeyword
+          // Search filter
           data = await fetchProductsByKeyword(
             searchQuery,
             pageNumber,
@@ -22,20 +26,35 @@ const ProductList = ({ searchQuery }) => {
             "productName",
             "desc"
           );
+        } else if (selectedCategoryId) {
+          // Category filter
+          data = await fetchProductsByCategoryId(
+            selectedCategoryId,
+            pageNumber,
+            10,
+            "productName",
+            "desc"
+          );
         } else {
-          // If there's no search query, fetch all products
-          data = await fetchAllProducts(pageNumber, 10, "productName", "desc");
+          // All products
+          data = await fetchAllProducts(
+            pageNumber,
+            10,
+            "productName",
+            "desc"
+          );
         }
+
         setProducts(data.content);
-        setPageNumber(data.pageNumber);
-        setTotalPages(data.totalPages);
+        setPageNumber(data.pageNumber || 0);
+        setTotalPages(data.totalPages || 1);
       } catch (error) {
         console.error(error);
       }
     };
 
     loadProducts();
-  }, [pageNumber, searchQuery]); // Run when pageNumber or searchQuery changes
+  }, [pageNumber, searchQuery, selectedCategoryId]);
 
   return (
     <>
@@ -69,11 +88,13 @@ const ProductList = ({ searchQuery }) => {
         ))}
       </div>
 
-      <Pagination
-        pageNumber={pageNumber}
-        totalPages={totalPages}
-        setPageNumber={setPageNumber}
-      />
+      {totalPages > 1 && (
+        <Pagination
+          pageNumber={pageNumber}
+          totalPages={totalPages}
+          setPageNumber={setPageNumber}
+        />
+      )}
     </>
   );
 };
