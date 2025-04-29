@@ -14,7 +14,6 @@ const LoginPage = () => {
     try {
       const data = await loginUser(username, password);
       login(data); // set user or token
-      localStorage.setItem("token", data.token); // optional
       navigate("/products"); // go to home/dashboard
     } catch (err) {
       alert("Login failed");
@@ -27,7 +26,7 @@ const LoginPage = () => {
       <h2 className="text-xl font-bold mb-4">Sign In</h2>
       <input
         type="text"
-        placeholder="username"
+        placeholder="Username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         className="block w-full mb-4 border px-3 py-2"
@@ -41,9 +40,18 @@ const LoginPage = () => {
       />
       <button
         type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded"
+        className="bg-blue-500 text-white px-4 py-2 rounded w-full"
       >
         Login
+      </button>
+
+      <p className="text-center mt-4 text-sm text-gray-600">Don't have an account?</p>
+      <button
+        type="button"
+        onClick={() => navigate("/signup")}
+        className="bg-gray-200 text-gray-800 px-4 py-2 rounded w-full mt-2"
+      >
+        Sign Up
       </button>
     </form>
   );

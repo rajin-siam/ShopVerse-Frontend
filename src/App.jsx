@@ -16,7 +16,7 @@ import ProductsPage from "./pages/ProductsPage";
 import LoginPage from "./pages/LoginPage"; // Import login page
 import { ProductsProvider } from "./contexts/ProductsContext";
 import { AuthProvider, useAuth } from "./contexts/AuthContext"; // Import AuthContext
-
+import {SignupPage} from './pages/SignupPage'
 // PrivateRoute component to protect routes
 const PrivateRoute = ({ children }) => {
   const { user } = useAuth();
@@ -42,6 +42,7 @@ function App() {
             />
             {/* Login route */}
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
             {/* About, Contact, Cart pages */}
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
