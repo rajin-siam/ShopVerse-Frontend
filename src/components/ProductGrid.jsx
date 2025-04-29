@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { fetchAllProducts, fetchProductsByKeyword } from "./../api/productsApi";
+import { fetchAllProducts, fetchProductsByKeyword, fetchProductsByCategoryId } from "./../api/productsApi";
 import Product from "./Product";
 import Pagination from "./Pagination";
 
-const ProductGrid = ({ searchQuery }) => {
-  // Accept searchQuery as a prop
+const ProductGrid = ({ searchQuery, selectedCategoryId }) => {
   const [products, setProducts] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -14,28 +13,26 @@ const ProductGrid = ({ searchQuery }) => {
       let data;
       try {
         if (searchQuery) {
-          // When there's a search query
-          data = await fetchProductsByKeyword(
-            searchQuery,
-            pageNumber,
-            10,
-            "productName",
-            "desc"
-          );
+          data = await fetchProductsByKeyword(searchQuery, pageNumber, 10, "productName", "desc");
+        } else if (selectedCategoryId) {
+          data = await fetchProductsByCategoryId(selectedCategoryId, pageNumber, 10, "productName", "desc"); // No pagination support
+          setProducts(data.content); // Direct list
+         // setTotalPages(1);
+          return;
         } else {
-          // When there's no search query, fetch all products
           data = await fetchAllProducts(pageNumber, 10, "productName", "desc");
         }
-        setProducts(data.content); // Assuming data.content is the list of products
-        setPageNumber(data.pageNumber); // Assuming data.pageNumber gives the current page number
-        setTotalPages(data.totalPages); // Assuming data.totalPages gives total pages
+
+        setProducts(data.content);
+        setPageNumber(data.pageNumber || 0);
+        setTotalPages(data.totalPages || 1);
       } catch (error) {
         console.log(error);
       }
     };
 
     loadProducts();
-  }, [pageNumber, searchQuery]); // Run when pageNumber or searchQuery changes
+  }, [pageNumber, searchQuery, selectedCategoryId]);
 
   return (
     <>
@@ -44,11 +41,13 @@ const ProductGrid = ({ searchQuery }) => {
           <Product key={product.productId} product={product} />
         ))}
       </div>
-      <Pagination
-        pageNumber={pageNumber}
-        totalPages={totalPages}
-        setPageNumber={setPageNumber}
-      />
+      {totalPages > 1 && (
+        <Pagination
+          pageNumber={pageNumber}
+          totalPages={totalPages}
+          setPageNumber={setPageNumber}
+        />
+      )}
     </>
   );
 };
