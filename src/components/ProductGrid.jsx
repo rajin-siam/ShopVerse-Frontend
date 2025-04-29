@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { fetchAllProducts, fetchProductsByKeyword, fetchProductsByCategoryId } from "./../api/productsApi";
 import Product from "./Product";
 import Pagination from "./common/Pagination";
+import { useProducts } from "../contexts/ProductsContext";
 
-const ProductGrid = ({ searchQuery, selectedCategoryId }) => {
+const ProductGrid = () => {
+  const { searchQuery, selectedCategory} = useProducts();
   const [products, setProducts] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -14,8 +16,8 @@ const ProductGrid = ({ searchQuery, selectedCategoryId }) => {
       try {
         if (searchQuery) {
           data = await fetchProductsByKeyword(searchQuery, pageNumber, 10, "productName", "desc");
-        } else if (selectedCategoryId) {
-          data = await fetchProductsByCategoryId(selectedCategoryId, pageNumber, 10, "productName", "desc"); // No pagination support
+        } else if (selectedCategory) {
+          data = await fetchProductsByCategoryId(selectedCategory, pageNumber, 10, "productName", "desc"); // No pagination support
           setProducts(data.content); // Direct list
          // setTotalPages(1);
           return;
@@ -32,7 +34,7 @@ const ProductGrid = ({ searchQuery, selectedCategoryId }) => {
     };
 
     loadProducts();
-  }, [pageNumber, searchQuery, selectedCategoryId]);
+  }, [pageNumber, searchQuery, selectedCategory]);
 
   return (
     <>

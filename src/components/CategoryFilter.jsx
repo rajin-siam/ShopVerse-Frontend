@@ -6,7 +6,9 @@ const CategoryFilter = ({ onCategorySelect }) => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("http://localhost:8081/api/public/categories?pageNumber=0&pageSize=10&sortBy=categoryName&sortOrder=desc");
+        const res = await fetch(
+          "http://localhost:8081/api/public/categories?pageNumber=0&pageSize=20&sortBy=categoryName&sortOrder=desc"
+        );
         const data = await res.json();
         setCategories(data.content); // because it's paginated
       } catch (error) {
@@ -22,7 +24,10 @@ const CategoryFilter = ({ onCategorySelect }) => {
       <label className="block font-semibold mb-2">Filter by Category:</label>
       <select
         className="border rounded px-4 py-2"
-        onChange={(e) => onCategorySelect(e.target.value)}
+        onChange={(e) => {
+          console.log(e.target.value);
+          return onCategorySelect(e.target.value);
+        }}
       >
         <option value="">All</option>
         {categories.map((category) => (

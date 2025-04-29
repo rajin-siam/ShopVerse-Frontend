@@ -6,11 +6,14 @@ import {
 } from "./../api/productsApi";
 import Product from "./Product";
 import Pagination from "./common/Pagination";
+import { useProducts } from "../contexts/ProductsContext";
 
-const ProductList = ({ searchQuery, selectedCategoryId }) => {
+const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+
+  const { searchQuery, selectedCategory } = useProducts();
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -26,10 +29,10 @@ const ProductList = ({ searchQuery, selectedCategoryId }) => {
             "productName",
             "desc"
           );
-        } else if (selectedCategoryId) {
+        } else if (selectedCategory) {
           // Category filter
           data = await fetchProductsByCategoryId(
-            selectedCategoryId,
+            selectedCategory,
             pageNumber,
             10,
             "productName",
@@ -37,12 +40,7 @@ const ProductList = ({ searchQuery, selectedCategoryId }) => {
           );
         } else {
           // All products
-          data = await fetchAllProducts(
-            pageNumber,
-            10,
-            "productName",
-            "desc"
-          );
+          data = await fetchAllProducts(pageNumber, 10, "productName", "desc");
         }
 
         setProducts(data.content);
@@ -54,7 +52,7 @@ const ProductList = ({ searchQuery, selectedCategoryId }) => {
     };
 
     loadProducts();
-  }, [pageNumber, searchQuery, selectedCategoryId]);
+  }, [pageNumber, searchQuery, selectedCategory]);
 
   return (
     <>

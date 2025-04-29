@@ -1,13 +1,17 @@
-import React, { useState } from "react";
 import ProductGrid from "../components/ProductGrid";
 import ProductList from "../components/ProductList";
 import { SearchBar } from "../components/SearchBar";
 import CategoryFilter from "../components/CategoryFilter";
-
+import { useProducts } from "../contexts/ProductsContext";
 const ProductsPage = () => {
-  const [view, setView] = useState("grid");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const {
+    view,
+    setView,
+   // searchQuery,
+    setSearchQuery,
+   // selectedCategory,
+    setSelectedCategory,
+  } = useProducts();
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -29,17 +33,7 @@ const ProductsPage = () => {
         </button>
       </div>
 
-      {view === "grid" ? (
-        <ProductGrid
-          searchQuery={searchQuery}
-          selectedCategoryId={selectedCategory}
-        />
-      ) : (
-        <ProductList
-          searchQuery={searchQuery}
-          selectedCategoryId={selectedCategory}
-        />
-      )}
+      {view === "grid" ? <ProductGrid /> : <ProductList />}
     </div>
   );
 };
