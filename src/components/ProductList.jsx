@@ -5,7 +5,7 @@ import {
   fetchProductsByCategoryId,
 } from "./../api/productsApi";
 import Product from "./Product";
-import Pagination from "./Pagination";
+import Pagination from "./common/Pagination";
 
 const ProductList = ({ searchQuery, selectedCategoryId }) => {
   const [products, setProducts] = useState([]);

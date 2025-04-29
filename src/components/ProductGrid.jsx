@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchAllProducts, fetchProductsByKeyword, fetchProductsByCategoryId } from "./../api/productsApi";
 import Product from "./Product";
-import Pagination from "./Pagination";
+import Pagination from "./common/Pagination";
 
 const ProductGrid = ({ searchQuery, selectedCategoryId }) => {
   const [products, setProducts] = useState([]);
