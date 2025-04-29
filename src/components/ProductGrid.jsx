@@ -1,35 +1,48 @@
 import React, { useEffect, useState } from "react";
-import { fetchAllProducts, fetchProductsByKeyword, fetchProductsByCategoryId } from "./../api/productsApi";
+import {
+  fetchAllProducts,
+  fetchProductsByKeyword,
+  fetchProductsByCategoryId,
+} from "../api/productsApi";
 import Product from "./Product";
 import Pagination from "./common/Pagination";
 import { useProducts } from "../contexts/ProductsContext";
 
 const ProductGrid = () => {
-  const { searchQuery, selectedCategory} = useProducts();
+  const { searchQuery, selectedCategory, pageNumber, setPageNumber } =
+    useProducts();
   const [products, setProducts] = useState([]);
-  const [pageNumber, setPageNumber] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     const loadProducts = async () => {
-      let data;
       try {
+        let data;
+
         if (searchQuery) {
-          data = await fetchProductsByKeyword(searchQuery, pageNumber, 10, "productName", "desc");
+          data = await fetchProductsByKeyword(
+            searchQuery,
+            pageNumber,
+            10,
+            "productName",
+            "desc"
+          );
         } else if (selectedCategory) {
-          data = await fetchProductsByCategoryId(selectedCategory, pageNumber, 10, "productName", "desc"); // No pagination support
-          setProducts(data.content); // Direct list
-         // setTotalPages(1);
-          return;
+          data = await fetchProductsByCategoryId(
+            selectedCategory,
+            pageNumber,
+            10,
+            "productName",
+            "desc"
+          );
         } else {
           data = await fetchAllProducts(pageNumber, 10, "productName", "desc");
         }
 
         setProducts(data.content);
-        setPageNumber(data.pageNumber || 0);
         setTotalPages(data.totalPages || 1);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
 
@@ -43,6 +56,7 @@ const ProductGrid = () => {
           <Product key={product.productId} product={product} />
         ))}
       </div>
+
       {totalPages > 1 && (
         <Pagination
           pageNumber={pageNumber}

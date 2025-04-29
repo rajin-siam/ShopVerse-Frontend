@@ -9,6 +9,7 @@ export const ProductsProvider = ({ children }) => {
   const [view, setView] = useState("grid");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [pageNumber, setPageNumber] = useState(0);
 
   return (
     <ProductsContext.Provider
@@ -19,6 +20,8 @@ export const ProductsProvider = ({ children }) => {
         setSearchQuery,
         selectedCategory,
         setSelectedCategory,
+        pageNumber,
+        setPageNumber,
       }}
     >
       {children}
