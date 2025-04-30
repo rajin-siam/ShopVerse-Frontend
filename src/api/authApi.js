@@ -6,13 +6,14 @@ export const loginUser = async (username, password) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ username, password }),
+      credentials: 'include',
     });
   
     if (!response.ok) {
       throw new Error("Login failed");
     }
-  
-    return response.json(); // returns token or user data
+    const data = response.json()
+    return data // returns token or user data
   };
   
 

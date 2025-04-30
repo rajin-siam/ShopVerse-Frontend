@@ -13,6 +13,7 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       const data = await loginUser(username, password);
+      console.log(data)
       login(data); // set user or token
       navigate("/products"); // go to home/dashboard
     } catch (err) {
