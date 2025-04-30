@@ -1,66 +1,29 @@
-async function addToCart(productId, quantity) {
-  const response = await fetch(
-    `http://localhost:8081/api/carts/products/${productId}/quantity/${quantity}`,
-    {
-      method: "POST",
-      credentials: "include",
-    }
-  );
+const API_BASE = "http://localhost:8081/api/carts";
 
-  if (!response.ok) {
-    throw new Error("Failed to add product to cart");
-  }
-
-  return await response.json();
-}
-
-async function fetchCart() {
-  const response = await fetch(`http://localhost:8081/api/carts/users/cart`, {
-    method: "GET",
+const apiClient = async (url, options = {}) => {
+  const response = await fetch(`${API_BASE}${url}`, {
     credentials: "include",
+    ...options,
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch cart");
+    const error = await response.text();
+    throw new Error(error || "Request failed");
   }
 
-  return await response.json();
-}
+  return response.json();
+};
 
-async function updateQuantity(productId, operation) {
-  console.log(operation);
-  const response = await fetch(
-    `http://localhost:8081/api/carts/products/${productId}/quantity/${operation}`,
-    {
-      method: "PUT",
-      credentials: "include",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  );
+export const addToCart = (productId, quantity) =>
+  apiClient(`/products/${productId}/quantity/${quantity}`, { method: "POST" });
 
-  if (!response.ok) {
-    throw new Error("Failed to update quantity");
-  }
+export const fetchCart = () => apiClient("/users/cart");
 
-  return await response.json();
-}
+export const updateQuantity = (productId, operation) =>
+  apiClient(`/products/${productId}/quantity/${operation}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+  });
 
-async function removeFromCart(cartId, productId) {
-  const response = await fetch(
-    `http://localhost:8081/api/carts/${cartId}/product/${productId}`,
-    {
-      method: "DELETE",
-      credentials: "include",
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error("Failed to remove item from cart");
-  }
-
-  return true;
-}
-
-export { addToCart, fetchCart, updateQuantity, removeFromCart };
+export const removeFromCart = (cartId, productId) =>
+  apiClient(`/${cartId}/product/${productId}`, { method: "DELETE" });
