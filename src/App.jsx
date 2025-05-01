@@ -14,14 +14,14 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import LoginPage from "./pages/LoginPage";
 import { SignupPage } from "./pages/SignupPage";
-
+import { CheckoutPage } from "./pages/CheckoutPage.jsx"; // Updated import path
+import OrderConfirmation from "./pages/OrderConfirmation"; // Add this import
 import { Toaster } from "react-hot-toast";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
 import { ProductsProvider } from "./contexts/ProductsContext";
 
 function App() {
-  // ✅ Moved inside to prevent context errors
   const PrivateRoute = ({ children }) => {
     const { user, loading } = useAuth();
 
@@ -53,11 +53,29 @@ function App() {
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
+              
+              {/* Protected Routes */}
               <Route
                 path="/cart"
                 element={
                   <PrivateRoute>
                     <CartPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/checkout"
+                element={
+                  <PrivateRoute>
+                    <CheckoutPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/confirmation/:orderId"
+                element={
+                  <PrivateRoute>
+                    <OrderConfirmation />
                   </PrivateRoute>
                 }
               />
