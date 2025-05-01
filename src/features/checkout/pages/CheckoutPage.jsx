@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CheckoutStepper } from "../components/CheckoutStepper";
-import { AddressStep } from "./../components/AddressStep";
-import { PaymentStep } from "./../components/PaymentStep";
-import { ReviewStep } from "./../components/ReviewStep";
+import { AddressStep } from "../components/AddressStep";
+import { PaymentStep } from "../components/PaymentStep";
+import { ReviewStep } from "../components/ReviewStep";
 
 const STEPS = ["Address", "Payment", "Review"];
 

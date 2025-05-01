@@ -6,20 +6,20 @@ import {
   Navigate,
 } from "react-router-dom";
 
-import NavBar from "./components/layout/NavBar";
+import NavBar from "./common/components/layout/NavBar.jsx";
 import HomePage from "./pages/HomePage";
-import ProductsPage from "./pages/ProductsPage";
-import CartPage from "./pages/CartPage";
+import ProductsPage from "./features/products/pages/ProductsPage.jsx";
+import CartPage from "./features/cart/pages/CartPage.jsx";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
-import LoginPage from "./pages/LoginPage";
-import { SignupPage } from "./pages/SignupPage";
-import { CheckoutPage } from "./pages/CheckoutPage.jsx"; // Updated import path
-import OrderConfirmation from "./pages/OrderConfirmation"; // Add this import
+import LoginPage from "./features/auth/pages/LoginPage.jsx";
+import { SignupPage } from "./features/auth/pages/SignupPage.jsx";
+import { CheckoutPage } from "./features/checkout/pages/CheckoutPage.jsx"; // Updated import path
+import OrderConfirmation from "./features/checkout/pages/OrderConfirmation.jsx"; // Add this import
 import { Toaster } from "react-hot-toast";
-import { AuthProvider, useAuth } from "./contexts/AuthContext";
-import { CartProvider } from "./contexts/CartContext";
-import { ProductsProvider } from "./contexts/ProductsContext";
+import { AuthProvider, useAuth } from "./common/contexts/AuthContext.jsx";
+import { CartProvider } from "./common/contexts/CartContext.jsx";
+import { ProductsProvider } from "./common/contexts/ProductsContext.jsx";
 
 function App() {
   const PrivateRoute = ({ children }) => {

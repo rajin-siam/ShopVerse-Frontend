@@ -4,8 +4,8 @@ import {
   fetchProductsByKeyword,
   fetchProductsByCategoryId,
 } from "../api/productsApi";
-import Pagination from "./common/Pagination";
-import { useProducts } from "../contexts/ProductsContext";
+import Pagination from "./../../../common/components/ui/Pagination";
+import { useProducts } from "./../../../common/contexts/ProductsContext";
 
 const ProductList = () => {
   const { searchQuery, selectedCategory, pageNumber, setPageNumber } =

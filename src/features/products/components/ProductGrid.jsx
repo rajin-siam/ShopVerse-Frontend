@@ -3,10 +3,10 @@ import {
   fetchAllProducts,
   fetchProductsByKeyword,
   fetchProductsByCategoryId,
-} from "../api/productsApi";
+} from "./../api/productsApi";
 import Product from "./Product";
-import Pagination from "./common/Pagination";
-import { useProducts } from "../contexts/ProductsContext";
+import Pagination from "./../../../common/components/ui/Pagination";
+import { useProducts } from "./../../../common/contexts/ProductsContext";
 
 const ProductGrid = () => {
   const { searchQuery, selectedCategory, pageNumber, setPageNumber } =

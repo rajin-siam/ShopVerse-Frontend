@@ -1,6 +1,6 @@
 // components/Product.js
 import React from "react";
-import { useCart } from "../contexts/CartContext";
+import { useCart } from "./../../../common/contexts/CartContext";
 
 
 

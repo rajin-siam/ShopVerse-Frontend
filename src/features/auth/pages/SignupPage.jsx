@@ -1,8 +1,8 @@
 // SignupPage.jsx
 import { useState } from "react";
-import { signUpUser } from "../api/authApi";
+import { signUpUser } from "../../auth/api/authApi";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "./../../../common/contexts/AuthContext";
 
 
 export const SignupPage = () => {

@@ -1,9 +1,9 @@
 import React from "react";
 import ProductGrid from "../components/ProductGrid";
 import ProductList from "../components/ProductList";
-import { SearchBar } from "../components/SearchBar";
-import CategoryFilter from "../components/CategoryFilter";
-import { useProducts } from "../contexts/ProductsContext";
+import { SearchBar } from "../../../common/components/ui/SearchBar";
+import CategoryFilter from "../components/CategoryFilter/CategoryFilter";
+import { useProducts } from "../../../common/contexts/ProductsContext";
 
 const ProductsPage = () => {
   const {

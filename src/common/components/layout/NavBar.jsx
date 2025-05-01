@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { FaShoppingCart, FaHome } from "react-icons/fa";
-import { useAuth } from "../../contexts/AuthContext"; // Update the path if needed
+import { useAuth } from "./../../contexts/AuthContext"; // Update the path if needed
 import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
