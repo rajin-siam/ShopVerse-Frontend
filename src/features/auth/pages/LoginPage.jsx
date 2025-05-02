@@ -8,10 +8,11 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleLogin = async (e) => {
+    setLoading(true);
     e.preventDefault();
     setError(""); // Reset error on retry
 
@@ -30,6 +31,8 @@ const LoginPage = () => {
       } else {
         setError(err.message);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -51,11 +54,11 @@ const LoginPage = () => {
           onChange={(e) => setPassword(e.target.value)}
           className="block w-full mb-4 border px-3 py-2"
         />
-        <button
+        <button disabled={loading}
           type="submit"
           className="bg-blue-500 text-white px-4 py-2 rounded w-full"
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
 
         <p className="text-center mt-4 text-sm text-gray-600">
