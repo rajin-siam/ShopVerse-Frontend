@@ -24,7 +24,9 @@ export async function fetchProductsByKeyword(
   sortBy = "productName",
   sortOrder = "desc"
 ) {
-  const url = `http://localhost:8081/api/public/products/keyword/${keyword}?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+  // In fetchProductsByKeyword function:
+  const encodedKeyword = encodeURIComponent(keyword);
+  const url = `http://localhost:8081/api/public/products/keyword/${encodedKeyword}?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
   const response = await fetch(url);
 
   if (!response.ok) {
@@ -56,7 +58,7 @@ export const fetchProductsByCategoryId = async (
     }
 
     const data = await response.json();
-    console.log(data)
+    console.log(data);
     return data; // assuming it returns a paginated structure: { content, totalPages, etc. }
   } catch (error) {
     console.error("Error fetching products by category:", error);
