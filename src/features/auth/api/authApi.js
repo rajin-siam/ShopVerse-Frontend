@@ -1,20 +1,24 @@
 
 export const loginUser = async (username, password) => {
+  try {
     const response = await fetch("http://localhost:8081/api/auth/signin", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
       credentials: 'include',
     });
-  
+
     if (!response.ok) {
-      throw new Error("Login failed");
+      const errorData = await response.json(); // Parse error response
+      throw new Error(errorData.message || "Login failed"); // Use server-provided message
     }
-    const data = await response.json()
-    return data // returns token or user data
-  };
+
+    return await response.json(); // Return parsed data
+  } catch (err) {
+    console.error("Login error:", err);
+    throw new Error(err.message || "An unexpected error occurred");
+  }
+};
   
 
 
@@ -30,11 +34,8 @@ export const loginUser = async (username, password) => {
   
     if (!response.ok) {
       const error = await response.json(); // or response.json() if the server returns a JSON error
-      throw new Error(error || "Failed to sign up");
+      throw new Error(error.message || "Failed to Sign up");
     }
-    console.log(userData)
-
-    
     const data = await loginUser(userData.username, userData.password);
     return data;
   };

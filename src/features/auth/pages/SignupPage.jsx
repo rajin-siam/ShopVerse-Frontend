@@ -4,14 +4,17 @@ import { signUpUser } from "../../auth/api/authApi";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./../../../common/contexts/AuthContext";
 
-
 export const SignupPage = () => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
     role: ["user"], // default role
   });
+
+  const [error, setError] = useState("");
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -22,69 +25,89 @@ export const SignupPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setError("");
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return
+    }
     try {
       const data = await signUpUser(formData);
-      login(data)
+      login(data);
       alert("Signup successful!");
 
-      navigate('/products')
+      navigate("/products");
     } catch (err) {
-      alert("Signup failed!");
+      alert(err);
       console.error(err);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto p-6 shadow">
-      <h2 className="text-xl font-bold mb-4">Sign Up</h2>
-      <input
-        type="text"
-        name="username"
-        placeholder="Username"
-        value={formData.username}
-        onChange={handleChange}
-        className="block w-full mb-4 border px-3 py-2"
-        required
-      />
-      <input
-        type="email"
-        name="email"
-        placeholder="Email"
-        value={formData.email}
-        onChange={handleChange}
-        className="block w-full mb-4 border px-3 py-2"
-        required
-      />
-      <input
-        type="password"
-        name="password"
-        placeholder="Password"
-        value={formData.password}
-        onChange={handleChange}
-        className="block w-full mb-4 border px-3 py-2"
-        required
-      />
-      <select
-        name="role"
-        onChange={(e) =>
-          setFormData((prev) => ({
-            ...prev,
-            role: [e.target.value],
-          }))
-        }
-        className="block w-full mb-4 border px-3 py-2"
-      >
-        <option value="user">User</option>
-        <option value="admin">Admin</option>
-      </select>
+    <>
+      <form onSubmit={handleSubmit} className="max-w-md mx-auto p-6 shadow">
+        <h2 className="text-xl font-bold mb-4">Sign Up</h2>
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          value={formData.username}
+          onChange={handleChange}
+          className="block w-full mb-4 border px-3 py-2"
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          className="block w-full mb-4 border px-3 py-2"
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+          className="block w-full mb-4 border px-3 py-2"
+          required
+        />
 
-      <button
-        type="submit"
-        className="bg-green-500 text-white px-4 py-2 rounded"
-      >
-        Sign Up
-      </button>
-    </form>
+        {/* Add Password Confirmation Field */}
+        <input
+          type="password"
+          name="confirmPassword"
+          placeholder="Confirm Password"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          className="block w-full mb-4 border px-3 py-2"
+          required
+        />
+        <select
+          name="role"
+          onChange={(e) =>
+            setFormData((prev) => ({
+              ...prev,
+              role: [e.target.value],
+            }))
+          }
+          className="block w-full mb-4 border px-3 py-2"
+        >
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+
+        <button
+          type="submit"
+          className="bg-green-500 text-white px-4 py-2 rounded"
+        >
+          Sign Up
+        </button>
+      </form>
+
+      {error && <div className="text-red-500 mb-4">{error}</div>}
+    </>
   );
 };
-
