@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-
+import { signOutUser } from "../../features/auth/api/authApi";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -7,15 +7,21 @@ export const AuthProvider = ({ children }) => {
 
   const login = (userData) => {
     setUser(userData);
-    localStorage.setItem("token", userData.token);
     localStorage.setItem("user", JSON.stringify(userData));
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("token"); // Optional
-    localStorage.removeItem("user");
+  const logout = async () => {
+    try {
+      await signOutUser();
+      setUser(null);
+      localStorage.removeItem("user");
+    } catch (err) {
+      console.error("Logout failed:", err);
+      setUser(null);
+      localStorage.removeItem("user");
+    }
   };
+  
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {

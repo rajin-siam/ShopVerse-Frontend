@@ -1,11 +1,10 @@
-
 export const loginUser = async (username, password) => {
   try {
     const response = await fetch("http://localhost:8081/api/auth/signin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
-      credentials: 'include',
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -19,24 +18,41 @@ export const loginUser = async (username, password) => {
     throw new Error(err.message || "An unexpected error occurred");
   }
 };
-  
+
+export const signUpUser = async (userData) => {
+  const response = await fetch("http://localhost:8081/api/auth/signup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userData),
+  });
+
+  if (!response.ok) {
+    const error = await response.json(); // or response.json() if the server returns a JSON error
+    throw new Error(error.message || "Failed to Sign up");
+  }
+
+  const data = await loginUser(userData.username, userData.password);
+  return data;
+};
 
 
-  export const signUpUser = async (userData) => {
-    console.log(userData)
-    const response = await fetch("http://localhost:8081/api/auth/signup", {
+export const signOutUser = async () => {
+  try {
+    const response = await fetch("http://localhost:8081/api/auth/signout", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
+      credentials: "include", 
     });
-  
+
     if (!response.ok) {
-      const error = await response.json(); // or response.json() if the server returns a JSON error
-      throw new Error(error.message || "Failed to Sign up");
+      const error = await response.json();
+      throw new Error(error.message || "Logout failed");
     }
 
-    const data = await loginUser(userData.username, userData.password);
-    return data;
-  };
+    return await response.json(); 
+  } catch (err) {
+    console.error("Logout error:", err);
+    throw new Error(err.message || "Failed to disconnect session");
+  }
+};
