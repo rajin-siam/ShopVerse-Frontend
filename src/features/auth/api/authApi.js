@@ -12,7 +12,7 @@ export const loginUser = async (username, password) => {
     if (!response.ok) {
       throw new Error("Login failed");
     }
-    const data = response.json()
+    const data = await response.json()
     return data // returns token or user data
   };
   
@@ -29,7 +29,7 @@ export const loginUser = async (username, password) => {
     });
   
     if (!response.ok) {
-      const error = await response.text(); // or response.json() if the server returns a JSON error
+      const error = await response.json(); // or response.json() if the server returns a JSON error
       throw new Error(error || "Failed to sign up");
     }
     console.log(userData)
