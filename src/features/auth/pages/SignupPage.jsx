@@ -29,10 +29,11 @@ export const SignupPage = () => {
     setError("");
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
-      return
+      return;
     }
     try {
-      const data = await signUpUser(formData);
+      const { confirmPassword, ...cleanData } = formData;
+      const data = await signUpUser(cleanData);
       login(data);
       alert("Signup successful!");
 

@@ -36,6 +36,7 @@ export const loginUser = async (username, password) => {
       const error = await response.json(); // or response.json() if the server returns a JSON error
       throw new Error(error.message || "Failed to Sign up");
     }
+
     const data = await loginUser(userData.username, userData.password);
     return data;
   };
