@@ -6,12 +6,18 @@ const apiClient = async (url, options = {}) => {
     ...options,
   });
 
+  const contentType = response.headers.get("content-type");
+
   if (!response.ok) {
-    const error = await response.text();
-    throw new Error(error || "Request failed");
+    const error = contentType?.includes("application/json")
+      ? await response.json()
+      : await response.text();
+    throw new Error(error.message || error);
   }
 
-  return response.json();
+  return contentType?.includes("application/json")
+    ? response.json()
+    : response.text();
 };
 
 export const addToCart = (productId, quantity) =>
@@ -20,10 +26,7 @@ export const addToCart = (productId, quantity) =>
 export const fetchCart = () => apiClient("/users/cart");
 
 export const updateQuantity = (productId, operation) =>
-  apiClient(`/products/${productId}/quantity/${operation}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-  });
+  apiClient(`/products/${productId}/quantity/${operation}`, { method: "PUT" });
 
 export const removeFromCart = (cartId, productId) =>
   apiClient(`/${cartId}/product/${productId}`, { method: "DELETE" });
