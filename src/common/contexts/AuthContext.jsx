@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { signOutUser } from "../../features/auth/api/authApi";
+import { toast } from "react-hot-toast"; 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -8,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const login = (userData) => {
     setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));
+    toast.success("User Logged in Successfully")
   };
 
   const logout = async () => {
@@ -15,10 +17,11 @@ export const AuthProvider = ({ children }) => {
       await signOutUser();
       setUser(null);
       localStorage.removeItem("user");
+      toast.success("Logged out successfully!"); 
     } catch (err) {
-      console.error("Logout failed:", err);
       setUser(null);
       localStorage.removeItem("user");
+      toast.error("Logout failed. Please try again.");
     }
   };
   
