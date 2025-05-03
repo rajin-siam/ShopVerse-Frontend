@@ -28,6 +28,7 @@ export const CartProvider = ({ children }) => {
       setCart(updatedCart);
     } catch (err) {
       setError(err.message);
+      alert(err)
     }
   };
 

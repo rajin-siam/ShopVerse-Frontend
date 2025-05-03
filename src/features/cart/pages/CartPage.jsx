@@ -14,11 +14,6 @@ const CartPage = () => {
       </div>
     );
 
-  if (error)
-    return (
-      <div className="p-4 max-w-4xl mx-auto text-red-500">Error: {error}</div>
-    );
-
   if (!cart.products?.length)
     return (
       <div className="p-4 max-w-4xl mx-auto text-center py-12">
