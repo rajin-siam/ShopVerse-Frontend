@@ -5,7 +5,7 @@ import {
   updateQuantity,
   removeFromCart,
 } from "./../../features/cart/api/cartApi";
-
+import { toast } from "react-hot-toast";
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
@@ -31,9 +31,10 @@ export const CartProvider = ({ children }) => {
     try {
       const updatedCart = await addToCart(productId, quantity);
       setCart(updatedCart);
+      toast.success("Item added to cart! 🛒"); 
     } catch (err) {
       setError(err.message);
-      alert(err);
+      toast.error("Failed to add item." );
     }
   };
 
@@ -43,6 +44,7 @@ export const CartProvider = ({ children }) => {
       setCart(updatedCart);
     } catch (err) {
       setError(err.message);
+      toast.error("Failed to update quantity. Please refresh the page.");
     }
   };
 
@@ -54,9 +56,10 @@ export const CartProvider = ({ children }) => {
       await removeFromCart(cart.cartId, productId);
       const updatedCart = await fetchCart();
       setCart(updatedCart);
+      toast.success("Item removed from cart 🗑️");
     } catch (err) {
       setError(err.message);
-      alert(err.message); 
+      toast.error("Failed to update quantity. Please refresh the page.");
     }
   };
 
