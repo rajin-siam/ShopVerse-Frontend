@@ -1,5 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { addToCart, fetchCart, updateQuantity, removeFromCart } from "./../../features/cart/api/cartApi";
+import {
+  addToCart,
+  fetchCart,
+  updateQuantity,
+  removeFromCart,
+} from "./../../features/cart/api/cartApi";
 
 const CartContext = createContext();
 
@@ -28,7 +33,7 @@ export const CartProvider = ({ children }) => {
       setCart(updatedCart);
     } catch (err) {
       setError(err.message);
-      alert(err)
+      alert(err);
     }
   };
 
@@ -42,14 +47,16 @@ export const CartProvider = ({ children }) => {
   };
 
   const handleRemoveFromCart = async (productId) => {
+    if (!cart.cartId) {
+      throw new Error("Cart not loaded. Please refresh the page.");
+    }
     try {
       await removeFromCart(cart.cartId, productId);
-      setCart(prev => ({
-        ...prev,
-        products: prev.products.filter(item => item.productId !== productId)
-      }));
+      const updatedCart = await fetchCart();
+      setCart(updatedCart);
     } catch (err) {
       setError(err.message);
+      alert(err.message); 
     }
   };
 
@@ -61,7 +68,7 @@ export const CartProvider = ({ children }) => {
         error,
         handleAddToCart,
         handleUpdateQuantity,
-        handleRemoveFromCart
+        handleRemoveFromCart,
       }}
     >
       {children}
