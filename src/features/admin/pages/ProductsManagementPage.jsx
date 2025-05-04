@@ -56,61 +56,91 @@ const ProductsManagementPage = () => {
   };
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Product Management</h1>
-        <button
-          className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-          onClick={() => handleModal("Add")}
-        >
-          + Add Product
-        </button>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50 p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header Section */}
+        <div className="mb-8 border-b border-gray-200 pb-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-800 tracking-tight">
+                Product Management
+              </h1>
+              <p className="mt-2 text-gray-600">
+                Manage your product inventory and listings
+              </p>
+            </div>
+            <button
+              className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg 
+                         transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-indigo-200"
+              onClick={() => handleModal("Add")}
+            >
+              + Add New Product
+            </button>
+          </div>
+        </div>
+
+        {/* Error State */}
+        {error && (
+          <div className="mb-8">
+            <ErrorMessage message={error} />
+          </div>
+        )}
+
+        {/* Loading State */}
+        {loading ? (
+          <div className="flex justify-center items-center min-h-[400px]">
+            <LoadingSpinner className="w-16 h-16 text-indigo-600" />
+          </div>
+        ) : (
+          <>
+            {/* Product Table */}
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+              <ProductTable
+                products={products}
+                onEdit={(product) => handleModal("Edit", product)}
+                onDelete={deleteProduct}
+                onUploadImage={(productId) => handleModal("Upload", { productId })}
+              />
+            </div>
+
+            {/* Pagination */}
+            <div className="mt-8">
+              <Pagination
+                currentPage={pagination.pageNumber}
+                totalPages={pagination.totalPages}
+                onPageChange={handlePageChange}
+                className="border border-gray-200 rounded-lg p-2 bg-white shadow-sm"
+              />
+            </div>
+          </>
+        )}
+
+        {/* Modals */}
+        <AddProductModal
+          isOpen={modalState.showAdd}
+          onClose={() => handleModal("Add")}
+          onSubmit={(data) => createProduct(data.categoryId, data)}
+          categories={categories}
+        />
+
+        <EditProductModal
+          isOpen={modalState.showEdit}
+          onClose={() => handleModal("Edit")}
+          onSubmit={(data) => updateProduct(data.productId, data)}
+          initialData={modalState.selectedProduct}
+          categories={categories}
+        />
+
+        <UploadImageModal
+          isOpen={modalState.showUpload}
+          onClose={() => handleModal("Upload")}
+          productId={modalState.imageProductId}
+          onUploaded={fetchProducts}
+        />
       </div>
-
-      {error && <ErrorMessage message={error} />}
-      
-      {loading ? (
-        <LoadingSpinner />
-      ) : (
-        <>
-          <ProductTable
-            products={products}
-            onEdit={(product) => handleModal("Edit", product)}
-            onDelete={deleteProduct}
-            onUploadImage={(productId) => handleModal("Upload", { productId })}
-          />
-
-          <Pagination
-            currentPage={pagination.pageNumber}
-            totalPages={pagination.totalPages}
-            onPageChange={handlePageChange}
-          />
-        </>
-      )}
-
-      <AddProductModal
-        isOpen={modalState.showAdd}
-        onClose={() => handleModal("Add")}
-        onSubmit={(data) => createProduct(data.categoryId, data)}
-        categories={categories}
-      />
-
-      <EditProductModal
-        isOpen={modalState.showEdit}
-        onClose={() => handleModal("Edit")}
-        onSubmit={(data) => updateProduct(data.productId, data)}
-        initialData={modalState.selectedProduct}
-        categories={categories}
-      />
-
-      <UploadImageModal
-        isOpen={modalState.showUpload}
-        onClose={() => handleModal("Upload")}
-        productId={modalState.imageProductId}
-        onUploaded={fetchProducts}
-      />
     </div>
   );
 };
 
 export default ProductsManagementPage;
+

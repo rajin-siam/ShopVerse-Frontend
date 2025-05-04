@@ -21,7 +21,7 @@ import { AuthProvider, useAuth } from "./common/contexts/AuthContext.jsx";
 import { CartProvider } from "./common/contexts/CartContext.jsx";
 import { ProductsProvider } from "./common/contexts/ProductsContext.jsx";
 import { AdminLayout } from "./common/components/layout/AdminLayout.jsx";
-import { AdminDashboardPage } from "./features/admin/pages/AdminDashboardPage.jsx";
+import  AdminDashboardPage  from "./features/admin/pages/AdminDashboardPage.jsx";
 import ProductsManagementPage from "./features/admin/pages/ProductsManagementPage.jsx";
 
 function App() {
