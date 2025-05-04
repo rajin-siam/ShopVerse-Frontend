@@ -20,11 +20,13 @@ import { Toaster } from "react-hot-toast";
 import { AuthProvider, useAuth } from "./common/contexts/AuthContext.jsx";
 import { CartProvider } from "./common/contexts/CartContext.jsx";
 import { ProductsProvider } from "./common/contexts/ProductsContext.jsx";
+import { AdminLayout } from "./common/components/layout/AdminLayout.jsx";
+import { AdminDashboardPage } from "./features/admin/pages/AdminDashboardPage.jsx";
+import ProductsManagementPage from "./features/admin/pages/ProductsManagementPage.jsx";
 
 function App() {
   const PrivateRoute = ({ children }) => {
     const { user, loading } = useAuth();
-
     if (loading) {
       return <div className="text-center mt-10">Loading...</div>;
     }
@@ -32,6 +34,19 @@ function App() {
     return user ? children : <Navigate to="/login" />;
   };
 
+  const AdminRoute = ({ children }) => {
+    const { user, loading } = useAuth();
+
+    if (loading) {
+      return <div className="text-center p-8">Checking permissions...</div>;
+    }
+    // Redirect to home if not admin
+    if (!user || !user.roles.includes("ROLE_ADMIN")) {
+      return <Navigate to="/" replace />;
+    }
+
+    return children;
+  };
   return (
     <AuthProvider>
       <CartProvider>
@@ -53,7 +68,7 @@ function App() {
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
-              
+
               {/* Protected Routes */}
               <Route
                 path="/cart"
@@ -79,6 +94,18 @@ function App() {
                   </PrivateRoute>
                 }
               />
+
+              <Route
+                path="/admin"
+                element={
+                  <AdminRoute>
+                    <AdminLayout />
+                  </AdminRoute>
+                }
+              >
+                <Route index element={<AdminDashboardPage />} />
+                <Route path="products" element={<ProductsManagementPage />} />
+              </Route>
             </Routes>
           </div>
         </Router>
