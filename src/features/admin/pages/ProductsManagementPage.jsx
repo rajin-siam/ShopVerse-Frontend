@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import ProductTable from "../components/ProductTable";
-import AddProductModal from "../components/AddProductModal";
-import EditProductModal from "./../components/EditProductModal";
-import UploadImageModal from "../components/UploadImageModal";
+import ProductTable from "../components/Products/ProductTable";
+import AddProductModal from "../components/modals/AddProductModal";
+import EditProductModal from "../components/modals/EditProductModal";
+import UploadImageModal from "../components/modals/UploadImageModal";
 
 const ProductManagementPage = () => {
   const [products, setProducts] = useState([]);
