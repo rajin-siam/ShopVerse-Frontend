@@ -4,16 +4,19 @@ import { CheckoutStepper } from "../components/CheckoutStepper";
 import { AddressStep } from "../components/AddressStep";
 import { PaymentStep } from "../components/PaymentStep";
 import { ReviewStep } from "../components/ReviewStep";
+import { toast } from "react-hot-toast";
 
 const STEPS = ["Address", "Payment", "Review"];
 
 export const CheckoutPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [addressData, setAddressData] = useState(null); // Store full address data
+  const [addressData, setAddressData] = useState(null);
   const [paymentData, setPaymentData] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handlePlaceOrder = async () => {
+    setLoading(true);
     try {
       const response = await fetch(
         `http://localhost:8081/api/order/users/payments/${paymentData.pgName}`,
@@ -22,18 +25,27 @@ export const CheckoutPage = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             addressId: addressData.addressId,
-            ...paymentData,
+            pgPaymentId: paymentData.pgPaymentId,
+            pgStatus: paymentData.pgStatus,
+            pgResponseMessage: paymentData.pgResponseMessage
           }),
           credentials: 'include',
         }
       );
 
-      if (!response.ok) throw new Error("Order submission failed");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Order submission failed");
+      }
+      
       const orderData = await response.json();
+      toast.success("Order placed successfully!");
       navigate(`/confirmation/${orderData.orderId}`);
     } catch (error) {
       console.error("Order error:", error);
-      // Add error state handling here
+      toast.error(error.message || "Failed to place order. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,6 +78,7 @@ export const CheckoutPage = () => {
           payment={paymentData}
           onBack={() => setCurrentStep(2)}
           onConfirm={handlePlaceOrder}
+          loading={loading}
         />
       )}
     </div>
