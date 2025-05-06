@@ -23,6 +23,7 @@ import { ProductsProvider } from "./common/contexts/ProductsContext.jsx";
 import { AdminLayout } from "./common/components/layout/AdminLayout.jsx";
 import  AdminDashboardPage  from "./features/admin/pages/AdminDashboardPage.jsx";
 import ProductsManagementPage from "./features/admin/pages/ProductsManagementPage.jsx";
+import CategoriesManagementPage from "./features/admin/pages/CategoriesManagementPage.jsx";
 
 function App() {
   const PrivateRoute = ({ children }) => {
@@ -105,6 +106,7 @@ function App() {
               >
                 <Route index element={<AdminDashboardPage />} />
                 <Route path="products" element={<ProductsManagementPage />} />
+                <Route path="categories" element={<CategoriesManagementPage />} />
               </Route>
             </Routes>
           </div>

@@ -11,7 +11,10 @@ export const AdminLayout = () => {
             Dashboard
           </Link>
           <Link to="/admin/products" className="block text-white hover:bg-gray-700 p-2 rounded">
-            Products
+            Products Management
+          </Link>
+          <Link to="/admin/categories" className="block text-white hover:bg-gray-700 p-2 rounded">
+            Categories Management
           </Link>
         </nav>
       </aside>
