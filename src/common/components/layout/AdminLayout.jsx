@@ -16,6 +16,9 @@ export const AdminLayout = () => {
           <Link to="/admin/categories" className="block text-white hover:bg-gray-700 p-2 rounded">
             Categories Management
           </Link>
+          <Link to="/admin/orders" className="block text-white hover:bg-gray-700 p-2 rounded">
+            Orders Management
+          </Link>
         </nav>
       </aside>
 
