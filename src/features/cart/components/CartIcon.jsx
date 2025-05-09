@@ -1,42 +1,23 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { ShoppingCart } from 'lucide-react';
 
-const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
-  const { product, quantity } = item;
-
-  const handleIncrease = () => {
-    onUpdateQuantity(product.id, 'increment');
-  };
-
-  const handleDecrease = () => {
-    if (quantity > 1) {
-      onUpdateQuantity(product.id, 'decrement');
-    }
-  };
-
-  const handleRemove = () => {
-    onRemove(item.cartId, product.id); // you must ensure `cartId` is part of item
-  };
-
+const CartIcon = ({ itemCount = 0 }) => {
   return (
-    <div className="border p-4 mb-4 rounded shadow flex justify-between items-center">
-      <div>
-        <h2 className="text-lg font-semibold">{product.name}</h2>
-        <p>${product.price.toFixed(2)}</p>
-      </div>
-
-      <div className="flex items-center gap-2">
-        <button onClick={handleDecrease} className="px-2 py-1 bg-gray-200 rounded">-</button>
-        <span>{quantity}</span>
-        <button onClick={handleIncrease} className="px-2 py-1 bg-gray-200 rounded">+</button>
-        <button
-          onClick={handleRemove}
-          className="ml-4 px-3 py-1 bg-red-500 text-white rounded"
-        >
-          Remove
-        </button>
-      </div>
-    </div>
+    <Link 
+      to="/cart" 
+      className="relative p-2 text-gray-700 hover:text-indigo-600 transition-colors"
+      aria-label="View shopping cart"
+    >
+      <ShoppingCart size={24} />
+      
+      {itemCount > 0 && (
+        <span className="absolute -top-1 -right-1 bg-indigo-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+          {itemCount > 99 ? '99+' : itemCount}
+        </span>
+      )}
+    </Link>
   );
 };
 
-export default CartItem;
+export default CartIcon;
