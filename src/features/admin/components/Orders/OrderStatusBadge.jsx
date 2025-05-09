@@ -1,18 +1,25 @@
 import { CheckCircle, Clock, Truck, AlertCircle } from "lucide-react";
 
 export default function OrderStatusBadge({ status }) {
+  // Normalize status to lowercase for comparison
+  const normalizedStatus = status ? status.toLowerCase() : '';
+  
+  // Format display status with first letter capitalized
+  const displayStatus = status ? 
+    status.charAt(0).toUpperCase() + status.slice(1).toLowerCase() : '';
+  
   // Get status icon based on order status
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case "Delivered":
+  const getStatusIcon = (normalizedStatus) => {
+    switch (normalizedStatus) {
+      case "delivered":
         return <CheckCircle className="text-green-500" size={16} />;
-      case "Processing":
+      case "processing":
         return <Clock className="text-blue-500" size={16} />;
-      case "Shipped":
+      case "shipped":
         return <Truck className="text-purple-500" size={16} />;
-      case "Pending":
+      case "pending":
         return <Clock className="text-yellow-500" size={16} />;
-      case "Cancelled":
+      case "cancelled":
         return <AlertCircle className="text-red-500" size={16} />;
       default:
         return null;
@@ -21,21 +28,21 @@ export default function OrderStatusBadge({ status }) {
 
   return (
     <div className="flex items-center">
-      {getStatusIcon(status)}
+      {getStatusIcon(normalizedStatus)}
       <span
         className={`ml-1 text-sm ${
-          status === "Delivered"
+          normalizedStatus === "delivered"
             ? "text-green-800"
-            : status === "Processing"
+            : normalizedStatus === "processing"
             ? "text-blue-800"
-            : status === "Shipped"
+            : normalizedStatus === "shipped"
             ? "text-purple-800"
-            : status === "Pending"
+            : normalizedStatus === "pending"
             ? "text-yellow-800"
             : "text-red-800"
         }`}
       >
-        {status}
+        {displayStatus}
       </span>
     </div>
   );

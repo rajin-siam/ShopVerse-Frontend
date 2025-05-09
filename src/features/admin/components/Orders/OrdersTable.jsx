@@ -20,11 +20,11 @@ export default function OrdersTable({
             <th 
               scope="col" 
               className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-              onClick={() => handleSort('order_id')}
+              onClick={() => handleSort('orderId')}
             >
               <div className="flex items-center">
                 Order ID
-                {sortField === 'order_id' && (
+                {sortField === 'orderId' && (
                   sortDirection === 'asc' ? <ChevronUp size={16} /> : <ChevronDown size={16} />
                 )}
               </div>
@@ -32,11 +32,11 @@ export default function OrdersTable({
             <th 
               scope="col" 
               className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-              onClick={() => handleSort('order_date')}
+              onClick={() => handleSort('orderDate')}
             >
               <div className="flex items-center">
                 Date
-                {sortField === 'order_date' && (
+                {sortField === 'orderDate' && (
                   sortDirection === 'asc' ? <ChevronUp size={16} /> : <ChevronDown size={16} />
                 )}
               </div>
@@ -47,11 +47,11 @@ export default function OrdersTable({
             <th 
               scope="col" 
               className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-              onClick={() => handleSort('total_amount')}
+              onClick={() => handleSort('totalAmount')}
             >
               <div className="flex items-center">
                 Total
-                {sortField === 'total_amount' && (
+                {sortField === 'totalAmount' && (
                   sortDirection === 'asc' ? <ChevronUp size={16} /> : <ChevronDown size={16} />
                 )}
               </div>
@@ -66,34 +66,34 @@ export default function OrdersTable({
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {orders.map((order) => (
-            <React.Fragment key={order.order_id}>
+            <React.Fragment key={order.orderId}>
               <tr className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  #{order.order_id}
+                  #{order.orderId}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {new Date(order.order_date).toLocaleDateString()}
+                  {new Date(order.orderDate).toLocaleDateString()}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {order.email}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
-                  ${order.total_amount.toFixed(2)}
+                  ${parseFloat(order.totalAmount).toFixed(2)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <OrderStatusBadge status={order.order_status} />
+                  <OrderStatusBadge status={order.orderStatus}/>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <div className="flex space-x-3">
                     <button 
-                      onClick={() => toggleOrderDetails(order.order_id)}
+                      onClick={() => toggleOrderDetails(order.orderId)}
                       className="text-indigo-600 hover:text-indigo-900 flex items-center"
                     >
                       <ShoppingCart size={16} className="mr-1" />
-                      {expandedOrderId === order.order_id ? 'Hide Items' : 'View Items'}
+                      {expandedOrderId === order.orderId ? 'Hide Items' : 'View Items'}
                     </button>
                     <button 
-                      onClick={() => viewOrderDetails(order)}
+                      onClick={() => viewOrderDetails(order.orderId)}
                       className="text-green-600 hover:text-green-900"
                     >
                       Details
@@ -101,12 +101,12 @@ export default function OrdersTable({
                   </div>
                 </td>
               </tr>
-              {expandedOrderId === order.order_id && (
+              {expandedOrderId === order.orderId && order.orderItems && (
                 <tr>
                   <td colSpan="6" className="px-6 py-4 bg-gray-50">
                     <div className="ml-8 border-l-2 border-indigo-300 pl-4">
                       <h4 className="font-medium text-sm mb-2">Order Items:</h4>
-                      <OrderItemsTable items={order.items} />
+                      <OrderItemsTable items={order.orderItems} />
                     </div>
                   </td>
                 </tr>
