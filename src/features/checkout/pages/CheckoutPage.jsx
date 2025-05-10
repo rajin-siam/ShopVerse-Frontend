@@ -5,7 +5,7 @@ import { AddressStep } from "../components/AddressStep";
 import { PaymentStep } from "../components/PaymentStep";
 import { ReviewStep } from "../components/ReviewStep";
 import { toast } from "react-hot-toast";
-
+import { useCart } from "../../../common/contexts/CartContext";
 const STEPS = ["Address", "Payment", "Review"];
 
 export const CheckoutPage = () => {
@@ -13,8 +13,9 @@ export const CheckoutPage = () => {
   const [addressData, setAddressData] = useState(null);
   const [paymentData, setPaymentData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const {setCart} = useCart();
   const navigate = useNavigate();
-
+  
   const handlePlaceOrder = async () => {
     setLoading(true);
     try {
@@ -40,6 +41,7 @@ export const CheckoutPage = () => {
       
       const orderData = await response.json();
       toast.success("Order placed successfully!");
+      setCart({ products: [], totalPrice: 0 });
       navigate(`/confirmation/${orderData.orderId}`);
     } catch (error) {
       console.error("Order error:", error);
