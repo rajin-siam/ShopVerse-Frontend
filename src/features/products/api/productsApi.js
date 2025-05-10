@@ -65,3 +65,17 @@ export const fetchProductsByCategoryId = async (
     throw error;
   }
 };
+
+
+// Function to fetch product details by ID
+export async function fetchProductById(productId) {
+  const url = `http://localhost:8081/api/public/products/${productId}`;
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch product details. Status: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data;
+}

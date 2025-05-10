@@ -9,6 +9,8 @@ import {
 import NavBar from "./common/components/layout/NavBar.jsx";
 import HomePage from "./pages/HomePage";
 import ProductsPage from "./features/products/pages/ProductsPage.jsx";
+
+import ProductDetailsPage from "./features/products/pages/ProductDetailsPage.jsx";
 import CartPage from "./features/cart/pages/CartPage.jsx";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -65,6 +67,10 @@ function App() {
                     <ProductsPage />
                   </ProductsProvider>
                 }
+              />
+              <Route
+                path="/product/:productId"
+                element={<ProductDetailsPage />}
               />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />

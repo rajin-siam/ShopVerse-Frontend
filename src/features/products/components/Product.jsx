@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom"; // Add this import
 import { useCart } from "../../../common/contexts/CartContext";
 
 const Product = ({ product, className = "", layout = "grid" }) => {
@@ -8,19 +9,26 @@ const Product = ({ product, className = "", layout = "grid" }) => {
     return (
       <div className={`bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 p-4 ${className}`}>
         <div className="flex flex-col md:flex-row items-center gap-6">
-          <div className="w-full md:w-40 h-40 relative flex-shrink-0">
+          {/* Add Link to the image */}
+          <Link 
+            to={`/product/${product.productId}`} 
+            className="w-full md:w-40 h-40 relative flex-shrink-0"
+          >
             <img
               src={product.image}
               alt={product.productName}
               className="w-full h-full object-cover rounded-lg"
             />
-          </div>
+          </Link>
           
           <div className="flex-1 py-4 md:py-0">
+            {/* Add Link to the product name */}
             <h3 className="text-lg font-medium text-gray-800 mb-2">
-              {product.productName.length > 50
-                ? product.productName.substring(0, 50) + "..."
-                : product.productName}
+              <Link to={`/product/${product.productId}`} className="hover:text-indigo-600 transition-colors">
+                {product.productName.length > 50
+                  ? product.productName.substring(0, 50) + "..."
+                  : product.productName}
+              </Link>
             </h3>
             <div className="flex items-center gap-3 mb-3">
               <span className="text-xl font-bold text-indigo-600">
@@ -50,7 +58,8 @@ const Product = ({ product, className = "", layout = "grid" }) => {
 
   return (
     <div className={`bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 ${className}`}>
-      <div className="relative w-full pt-[100%]">
+      {/* Add Link to the image */}
+      <Link to={`/product/${product.productId}`} className="relative w-full pt-[100%] block">
         <img
           src={product.image}
           alt={product.productName}
@@ -61,12 +70,15 @@ const Product = ({ product, className = "", layout = "grid" }) => {
             {product.discount}% OFF
           </span>
         </div>
-      </div>
+      </Link>
       <div className="p-4">
+        {/* Add Link to the product name */}
         <h3 className="text-gray-800 font-medium mb-2 h-12 line-clamp-2">
-          {product.productName.length > 50
-            ? product.productName.substring(0, 50) + "..."
-            : product.productName}
+          <Link to={`/product/${product.productId}`} className="hover:text-indigo-600 transition-colors">
+            {product.productName.length > 50
+              ? product.productName.substring(0, 50) + "..."
+              : product.productName}
+          </Link>
         </h3>
         <div className="flex items-baseline gap-2 mb-4">
           <span className="text-lg font-bold text-indigo-600">
