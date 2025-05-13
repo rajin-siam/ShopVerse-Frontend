@@ -13,6 +13,7 @@ const ProductDetailsPage = () => {
     specifications: true,
     description: true,
     reviews: true,
+    showAll: true,
   });
   const { handleAddToCart } = useCart();
 
@@ -55,14 +56,14 @@ const ProductDetailsPage = () => {
   };
 
   const toggleSection = (section) => {
-    setVisibleSections(prev => {
+    setVisibleSections((prev) => {
       const newSections = {};
       // Set all sections to false first
-      Object.keys(prev).forEach(key => {
+      Object.keys(prev).forEach((key) => {
         newSections[key] = false;
       });
       // Toggle the targeted section
-      newSections[section] = true
+      newSections[section] = true;
       return newSections;
     });
   };
@@ -72,6 +73,7 @@ const ProductDetailsPage = () => {
       specifications: true,
       description: true,
       reviews: true,
+      showAll: true,
     });
   };
 
@@ -405,37 +407,43 @@ const ProductDetailsPage = () => {
             <div className="flex flex-wrap gap-2 flex-start">
               <button
                 onClick={showAllSections}
-                className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 transition-colors"
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-all
+      bg-indigo-600 text-white
+      hover:bg-indigo-700
+      active:bg-indigo-800`}
               >
                 Show All
               </button>
               <button
                 onClick={() => toggleSection("specifications")}
-                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-                  visibleSections.specifications
-                    ? "bg-indigo-100 text-indigo-700"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-all
+      ${
+        visibleSections.specifications
+          ? "bg-indigo-600 text-white"
+          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      }`}
               >
                 Specifications
               </button>
               <button
                 onClick={() => toggleSection("description")}
-                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-                  visibleSections.description
-                    ? "bg-indigo-100 text-indigo-700"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-all
+      ${
+        visibleSections.description
+          ? "bg-indigo-600 text-white"
+          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      }`}
               >
                 Description
               </button>
               <button
                 onClick={() => toggleSection("reviews")}
-                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-                  visibleSections.reviews
-                    ? "bg-indigo-100 text-indigo-700"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-all
+      ${
+        visibleSections.reviews
+          ? "bg-indigo-600 text-white"
+          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      }`}
               >
                 Reviews
               </button>

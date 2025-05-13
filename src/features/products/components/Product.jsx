@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom"; // Add this import
+import { Link } from "react-router-dom";
 import { useCart } from "../../../common/contexts/CartContext";
 
 const Product = ({ product, className = "", layout = "grid" }) => {
@@ -7,24 +7,28 @@ const Product = ({ product, className = "", layout = "grid" }) => {
 
   if (layout === "list") {
     return (
-      <div className={`bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 p-4 ${className}`}>
+      <div
+        className={`bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out p-4 
+  hover:-translate-y-1.5 group relative ${className}`}
+      >
         <div className="flex flex-col md:flex-row items-center gap-6">
-          {/* Add Link to the image */}
-          <Link 
-            to={`/product/${product.productId}`} 
-            className="w-full md:w-40 h-40 relative flex-shrink-0"
+          <Link
+            to={`/product/${product.productId}`}
+            className="w-full md:w-40 h-40 relative flex-shrink-0 overflow-hidden rounded-xl"
           >
             <img
               src={product.image}
               alt={product.productName}
-              className="w-full h-full object-cover rounded-lg"
+              className="w-full h-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
             />
           </Link>
-          
+
           <div className="flex-1 py-4 md:py-0">
-            {/* Add Link to the product name */}
             <h3 className="text-lg font-medium text-gray-800 mb-2">
-              <Link to={`/product/${product.productId}`} className="hover:text-indigo-600 transition-colors">
+              <Link
+                to={`/product/${product.productId}`}
+                className="hover:text-indigo-600 transition-colors decoration-2 hover:underline underline-offset-4"
+              >
                 {product.productName.length > 50
                   ? product.productName.substring(0, 50) + "..."
                   : product.productName}
@@ -37,7 +41,7 @@ const Product = ({ product, className = "", layout = "grid" }) => {
               <span className="text-sm line-through text-gray-400">
                 ${product.price.toFixed(2)}
               </span>
-              <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
+              <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full shadow-sm">
                 {product.discount}% OFF
               </span>
             </div>
@@ -45,8 +49,9 @@ const Product = ({ product, className = "", layout = "grid" }) => {
 
           <button
             className="w-full md:w-auto bg-indigo-600 text-white px-6 py-3 rounded-md font-medium
-                      hover:bg-indigo-700 transition-colors duration-200
-                      focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                hover:bg-indigo-700 transition-colors duration-200 shadow-sm hover:shadow-md
+                focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
+                transform hover:-translate-y-0.5 active:translate-y-0"
             onClick={() => handleAddToCart(product.productId, 1)}
           >
             Add to Cart
@@ -57,31 +62,37 @@ const Product = ({ product, className = "", layout = "grid" }) => {
   }
 
   return (
-    <div className={`bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 ${className}`}>
-      {/* Add Link to the image */}
-      <Link to={`/product/${product.productId}`} className="relative w-full pt-[100%] block">
+    <div
+      className={`bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out group relative ${className}`}
+    >
+      <Link
+        to={`/product/${product.productId}`}
+        className="relative w-full pt-[100%] block overflow-hidden"
+      >
         <img
           src={product.image}
           alt={product.productName}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
-        <div className="absolute top-3 right-3">
-          <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
+        <div className="absolute top-2 right-2">
+          <span className="px-3 py-1.5 bg-green-100/95 text-green-700 text-xs font-medium rounded-full shadow-sm hover:bg-green-200/90 transition-colors">
             {product.discount}% OFF
           </span>
         </div>
       </Link>
       <div className="p-4">
-        {/* Add Link to the product name */}
         <h3 className="text-gray-800 font-medium mb-2 h-12 line-clamp-2">
-          <Link to={`/product/${product.productId}`} className="hover:text-indigo-600 transition-colors">
+          <Link
+            to={`/product/${product.productId}`}
+            className="hover:text-indigo-600 transition-colors decoration-2 hover:underline underline-offset-4"
+          >
             {product.productName.length > 50
               ? product.productName.substring(0, 50) + "..."
               : product.productName}
           </Link>
         </h3>
         <div className="flex items-baseline gap-2 mb-4">
-          <span className="text-lg font-bold text-indigo-600">
+          <span className="text-lg font-bold text-indigo-600 transition-transform duration-200 group-hover:scale-105 origin-left">
             ${product.specialPrice.toFixed(2)}
           </span>
           <span className="text-sm line-through text-gray-400">
@@ -89,8 +100,10 @@ const Product = ({ product, className = "", layout = "grid" }) => {
           </span>
         </div>
         <button
-          className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md
-                    hover:bg-indigo-700 transition-colors text-sm font-medium"
+          className="w-full bg-indigo-600 text-white py-2.5 px-4 rounded-lg
+                  hover:bg-indigo-700 transition-all duration-200 shadow-sm hover:shadow-md
+                  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
+                  transform hover:-translate-y-0.5 active:translate-y-0"
           onClick={() => handleAddToCart(product.productId, 1)}
         >
           Add to Cart
