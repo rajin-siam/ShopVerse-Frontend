@@ -46,12 +46,15 @@ const ProductDetailsContainer = ({ productId }) => {
       } finally {
         setLoading(false);
       }
+      checkWishlistStatus();
     };
 
     const checkWishlistStatus = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8081/api/public/wishlist/check/${productId}`
+          `http://localhost:8081/api/public/wishlist/check/${productId}`,{
+            credentials: 'include',
+          }
         );
         const data = await response.json();
         setIsInWishlist(data.isInWishlist);
@@ -73,6 +76,7 @@ const ProductDetailsContainer = ({ productId }) => {
           `http://localhost:8081/api/public/wishlist/remove/${productId}`,
           {
             method: "DELETE",
+            credentials: 'include',
           }
         );
       } else {
@@ -80,6 +84,7 @@ const ProductDetailsContainer = ({ productId }) => {
           `http://localhost:8081/api/public/wishlist/add/${productId}`,
           {
             method: "POST",
+            credentials: 'include',
           }
         );
       }
