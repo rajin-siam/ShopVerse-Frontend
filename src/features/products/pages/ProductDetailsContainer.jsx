@@ -13,6 +13,8 @@ import ProductInfoSection from "../components/ProductDetails/ProductInfoSection"
 import ProductSpecifications from "../components/ProductDetails/ProductSpecifications";
 import ProductDescription from "../components/ProductDetails/ProductDescription";
 import ProductReviews from "../components/ProductDetails/ProductReviews";
+import WishlistAndShareButtons from "../components/ProductDetails/WishlistAndShareButtons";
+
 
 const ProductDetailsContainer = ({ productId }) => {
   const [product, setProduct] = useState(null);
@@ -25,6 +27,10 @@ const ProductDetailsContainer = ({ productId }) => {
     reviews: true,
     showAll: true,
   });
+
+  const [isInWishlist, setIsInWishlist] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
+
   const { handleAddToCart } = useCart();
 
   useEffect(() => {
@@ -42,10 +48,48 @@ const ProductDetailsContainer = ({ productId }) => {
       }
     };
 
+    const checkWishlistStatus = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8081/api/public/wishlist/check/${productId}`
+        );
+        const data = await response.json();
+        setIsInWishlist(data.isInWishlist);
+      } catch (error) {
+        console.error("Error checking wishlist status:", error);
+      }
+    };
+
     if (productId) {
       getProductDetails();
     }
   }, [productId]);
+
+  const toggleWishlist = async () => {
+    setWishlistLoading(true);
+    try {
+      if (isInWishlist) {
+        await fetch(
+          `http://localhost:8081/api/public/wishlist/remove/${productId}`,
+          {
+            method: "DELETE",
+          }
+        );
+      } else {
+        await fetch(
+          `http://localhost:8081/api/public/wishlist/add/${productId}`,
+          {
+            method: "POST",
+          }
+        );
+      }
+      setIsInWishlist(!isInWishlist);
+    } catch (error) {
+      console.error("Error updating wishlist:", error);
+    } finally {
+      setWishlistLoading(false);
+    }
+  };
 
   // Handlers
   const handleQuantityChange = (e) => {
@@ -69,10 +113,6 @@ const ProductDetailsContainer = ({ productId }) => {
     handleAddToCart(productId, quantity);
   };
 
-
-
-
-
   // Parse the description string that uses | as separators
   const formatDescription = (description) => {
     if (!description) return [];
@@ -92,21 +132,21 @@ const ProductDetailsContainer = ({ productId }) => {
   }
 
   const descriptionPoints = formatDescription(product.description);
-  
+
   return (
     <div className="bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
         <Breadcrumb productName={product.productName} />
-        
+
         <div className="bg-white rounded-xl shadow-md overflow-hidden">
           {/* Product Layout */}
           <div className="md:flex">
             {/* Left side: Product Image */}
-            <ProductImageSection 
-              image={product.image} 
-              productName={product.productName} 
-              discount={product.discount} 
+            <ProductImageSection
+              image={product.image}
+              productName={product.productName}
+              discount={product.discount}
             />
 
             {/* Right side: Product Information */}
@@ -118,6 +158,13 @@ const ProductDetailsContainer = ({ productId }) => {
               onIncrease={increaseQuantity}
               onDecrease={decreaseQuantity}
               onAddToCart={addToCart}
+            />
+          </div>
+
+          <div className="mt-4 px-6">
+            <WishlistAndShareButtons
+              isInWishlist={isInWishlist}
+              onWishlistToggle={toggleWishlist}
             />
           </div>
 
@@ -137,10 +184,13 @@ const ProductDetailsContainer = ({ productId }) => {
             {visibleSections.reviews && <ProductReviews />}
           </div>
         </div>
-        
       </div>
     </div>
   );
 };
 
 export default ProductDetailsContainer;
+
+
+
+
