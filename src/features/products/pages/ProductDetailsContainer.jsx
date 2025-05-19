@@ -1,3 +1,4 @@
+// Updated ProductDetailsContainer.jsx
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { fetchProductById } from "../api/productsApi";
@@ -12,7 +13,7 @@ import ProductImageSection from "../components/ProductDetails/ProductImageSectio
 import ProductInfoSection from "../components/ProductDetails/ProductInfoSection";
 import ProductSpecifications from "../components/ProductDetails/ProductSpecifications";
 import ProductDescription from "../components/ProductDetails/ProductDescription";
-import ProductReviews from "../components/ProductDetails/ProductReviews";
+import ProductReviews from "./ProductReviews";
 import WishlistAndShareButtons from "../components/ProductDetails/WishlistAndShareButtons";
 
 
@@ -185,8 +186,8 @@ const ProductDetailsContainer = ({ productId }) => {
               <ProductDescription descriptionPoints={descriptionPoints} />
             )}
 
-            {/* Reviews Section */}
-            {visibleSections.reviews && <ProductReviews />}
+            {/* Reviews Section - Pass the product ID to the ProductReviews component */}
+            {visibleSections.reviews && <ProductReviews productId={productId} />}
           </div>
         </div>
       </div>
@@ -195,7 +196,3 @@ const ProductDetailsContainer = ({ productId }) => {
 };
 
 export default ProductDetailsContainer;
-
-
-
-
