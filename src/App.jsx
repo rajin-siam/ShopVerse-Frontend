@@ -27,8 +27,8 @@ import AdminDashboardPage from "./features/admin/pages/AdminDashboardPage.jsx";
 import ProductsManagementPage from "./features/admin/pages/ProductsManagementPage.jsx";
 import CategoriesManagementPage from "./features/admin/pages/CategoriesManagementPage.jsx";
 import OrderManagement from "./features/admin/components/Orders/OrderManagement.jsx";
-import { GoogleOAuthProvider } from '@react-oauth/google'
-
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import UserProfilePage from "./features/user/pages/UserProfilePage.jsx";
 function App() {
   const PrivateRoute = ({ children }) => {
     const { user, loading } = useAuth();
@@ -101,6 +101,15 @@ function App() {
                   element={
                     <PrivateRoute>
                       <OrderConfirmation />
+                    </PrivateRoute>
+                  }
+                />
+
+                <Route
+                  path="/profile"
+                  element={
+                    <PrivateRoute>
+                      <UserProfilePage />
                     </PrivateRoute>
                   }
                 />
