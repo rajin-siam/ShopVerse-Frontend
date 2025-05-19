@@ -11,7 +11,6 @@ const ProductInfoSection = ({
   onDecrease,
   onAddToCart,
 }) => {
-  console.log("product info section ", product.productId);
   return (
     <div className="md:w-3/5 p-8">
       <div className="mb-6">
@@ -67,8 +66,6 @@ const ProductInfoSection = ({
           />
         </div>
       </div>
-
-
     </div>
   );
 };
