@@ -11,7 +11,7 @@ const CartPageView = ({
   cart,
   user,
   onUpdateQuantity,
-  onRemoveFromCart
+  onRemoveFromCart,
 }) => {
   if (isLoading) {
     return <LoadingSpinner message="Loading your cart..." />;
@@ -28,35 +28,36 @@ const CartPageView = ({
   return (
     <div className="bg-gray-50 min-h-screen py-12 px-4">
       <div className="max-w-5xl mx-auto">
-
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Your Cart</h1>
         <p className="text-gray-600 mb-8">
-          You have {cart.products.length} {cart.products.length === 1 ? "item" : "items"} in your cart
+          You have {cart.products.length}{" "}
+          {cart.products.length === 1 ? "item" : "items"} in your cart
         </p>
+        <div className="flex flex-col md:flex-row">
+          {/* Cart Items Container */}
+          <div className="grid gap-6 mb-8">
+            {cart.products.map((item) => (
+              <CartItem
+                key={item.productId}
+                item={item}
+                onUpdateQuantity={(op) => onUpdateQuantity(item.productId, op)}
+                onRemove={() => onRemoveFromCart(item.productId)}
+              />
+            ))}
+          </div>
 
-        {/* Cart Items Container */}
-        <div className="grid gap-6 mb-8">
-          {cart.products.map((item) => (
-            <CartItem
-              key={item.productId}
-              item={item}
-              onUpdateQuantity={(op) => onUpdateQuantity(item.productId, op)}
-              onRemove={() => onRemoveFromCart(item.productId)}
-            />
-          ))}
+          {/* Order Summary */}
+          <OrderSummary cart={cart} />
         </div>
-
-        {/* Order Summary */}
-        <OrderSummary cart={cart} />
       </div>
     </div>
   );
 };
 
 const OrderSummary = ({ cart }) => (
-  <div className="bg-white rounded-xl shadow-sm p-6 lg:p-8 mt-8">
+  <div className="bg-white rounded-xl shadow-sm p-6 lg:p-8">
     <h2 className="text-xl font-bold text-gray-900 mb-6">Order Summary</h2>
-    
+
     <div className="space-y-3 mb-6">
       <div className="flex justify-between text-gray-600">
         <span>Subtotal</span>
@@ -67,7 +68,7 @@ const OrderSummary = ({ cart }) => (
         <span>Calculated at checkout</span>
       </div>
     </div>
-    
+
     <div className="border-t border-gray-200 pt-4 mb-6">
       <div className="flex justify-between items-center">
         <span className="text-lg font-semibold text-gray-900">Total</span>
