@@ -110,6 +110,7 @@ const AdminDashboard = () => {
       setLoading(false);
     }
   };
+
   const fetchProductCount = async () => {
     try {
       const response = await fetch('http://localhost:8081/api/admin/products/count');
@@ -127,10 +128,27 @@ const AdminDashboard = () => {
     }
   };
 
+  const fetchUserCount = async () => {
+    try {
+      const response = await fetch('http://localhost:8081/api/admin/utility/users/count');
+      if (!response.ok) {
+        throw new Error('Failed to fetch user count');
+      }
+      const data = await response.json();
+      setStats(prevStats => ({
+        ...prevStats,
+        totalUsers: data.totalUsers || 0
+      }));
+    } catch (err) {
+      console.error('Error fetching user count:', err);
+      // Optionally handle error state
+    }
+  };
 
   useEffect(() => {
     fetchOrders();
     fetchProductCount();
+    fetchUserCount();
   }, [currentPage, pageSize, sortBy, sortOrder, searchTerm, statusFilter]);
 
   const handleSearch = (e) => {
@@ -289,7 +307,11 @@ const AdminDashboard = () => {
         <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
         <div className="flex gap-4">
           <button
-            onClick={fetchOrders}
+            onClick={() => {
+              fetchOrders();
+              fetchProductCount();
+              fetchUserCount();
+            }}
             className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
           >
             Refresh Data

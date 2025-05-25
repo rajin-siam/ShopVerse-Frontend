@@ -40,7 +40,6 @@ const OrderConfirmation = () => {
             What's Next?
           </h2>
           <div className="space-y-2 text-gray-600">
-            <p>• You'll receive an order confirmation email shortly</p>
             <p>• We'll notify you when your items ship</p>
             <p>• Estimated delivery: 3-5 business days</p>
           </div>
