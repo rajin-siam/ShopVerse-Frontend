@@ -16,7 +16,6 @@ import ProductDescription from "../components/ProductDetails/ProductDescription"
 import ProductReviews from "./ProductReviews";
 import WishlistAndShareButtons from "../components/ProductDetails/WishlistAndShareButtons";
 
-
 const ProductDetailsContainer = ({ productId }) => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -53,8 +52,9 @@ const ProductDetailsContainer = ({ productId }) => {
     const checkWishlistStatus = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8081/api/public/wishlist/check/${productId}`,{
-            credentials: 'include',
+          `http://localhost:8081/api/public/wishlist/check/${productId}`,
+          {
+            credentials: "include",
           }
         );
         const data = await response.json();
@@ -77,7 +77,7 @@ const ProductDetailsContainer = ({ productId }) => {
           `http://localhost:8081/api/public/wishlist/remove/${productId}`,
           {
             method: "DELETE",
-            credentials: 'include',
+            credentials: "include",
           }
         );
       } else {
@@ -85,7 +85,7 @@ const ProductDetailsContainer = ({ productId }) => {
           `http://localhost:8081/api/public/wishlist/add/${productId}`,
           {
             method: "POST",
-            credentials: 'include',
+            credentials: "include",
           }
         );
       }
@@ -171,6 +171,7 @@ const ProductDetailsContainer = ({ productId }) => {
             <WishlistAndShareButtons
               isInWishlist={isInWishlist}
               onWishlistToggle={toggleWishlist}
+              productId={productId}
             />
           </div>
 
@@ -187,7 +188,9 @@ const ProductDetailsContainer = ({ productId }) => {
             )}
 
             {/* Reviews Section - Pass the product ID to the ProductReviews component */}
-            {visibleSections.reviews && <ProductReviews productId={productId} />}
+            {visibleSections.reviews && (
+              <ProductReviews productId={productId} />
+            )}
           </div>
         </div>
       </div>
