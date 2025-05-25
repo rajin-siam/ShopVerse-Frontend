@@ -40,9 +40,6 @@ const ProductReviewsContainer = ({ productId }) => {
     
     try {
       const response = await fetch(`http://localhost:8081/api/public/reviews/my-review/product/${productId}`, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
         credentials: 'include',
       });
       
@@ -76,7 +73,6 @@ const ProductReviewsContainer = ({ productId }) => {
         method,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
         },
         credentials: 'include',
         body: JSON.stringify({

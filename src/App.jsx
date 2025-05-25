@@ -54,20 +54,22 @@ function App() {
   };
   return (
     <GoogleOAuthProvider clientId="490184832474-47nbop45u4kcunld04aafg2f40o3ptdv.apps.googleusercontent.com">
+      <ProductsProvider>
       <AuthProvider>
         <CartProvider>
           <Router>
             <Toaster />
             <NavBar />
+            <Routes>
+            <Route path="/" element={<HomePage />} />
+            </Routes>
             <div className="container mx-auto px-4">
               <Routes>
-                <Route path="/" element={<HomePage />} />
                 <Route
                   path="/products"
                   element={
-                    <ProductsProvider>
+                    
                       <ProductsPage />
-                    </ProductsProvider>
                   }
                 />
                 <Route
@@ -135,6 +137,7 @@ function App() {
           </Router>
         </CartProvider>
       </AuthProvider>
+      </ProductsProvider>
     </GoogleOAuthProvider>
   );
 }

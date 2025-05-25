@@ -10,7 +10,7 @@ const CategoryFilter = ({ onCategorySelect }) => {
       setIsLoading(true);
       try {
         const res = await fetch(
-          "http://localhost:8081/api/public/categories?pageNumber=0&pageSize=20&sortBy=categoryName&sortOrder=desc"
+          "http://localhost:8081/api/public/categories?pageNumber=0&pageSize=30&sortBy=categoryName&sortOrder=desc"
         );
         const data = await res.json();
         setCategories(data.content);
