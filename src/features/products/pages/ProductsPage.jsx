@@ -56,7 +56,7 @@ const ProductsPage = () => {
           </div>
           
           {/* Search and Filters Row */}
-          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
+          <div className="flex flex-col  gap-4 items-start ">
             {/* Search Bar */}
             <div className="w-full lg:w-1/2">
               <SearchBar 
