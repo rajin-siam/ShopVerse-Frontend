@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { adminProductAPI } from './../api/adminProductAPI'
+import { useState } from "react";
+import { adminProductAPI } from "./../api/adminProductAPI";
 
 export const useAdminProducts = () => {
   const [products, setProducts] = useState([]);
@@ -20,7 +20,7 @@ export const useAdminProducts = () => {
         pagination.pageSize
       );
       setProducts(data.content);
-      setPagination(prev => ({
+      setPagination((prev) => ({
         ...prev,
         totalPages: data.totalPages,
       }));
@@ -32,7 +32,7 @@ export const useAdminProducts = () => {
   };
 
   const handlePageChange = (newPage) => {
-    setPagination(prev => ({
+    setPagination((prev) => ({
       ...prev,
       pageNumber: Math.max(0, Math.min(newPage, prev.totalPages - 1)),
     }));
@@ -86,6 +86,20 @@ export const useAdminProducts = () => {
     }
   };
 
+  const updateProductDiscount = async (productId, discountAmount) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8081/api/admin/products/${productId}/discount/${discountAmount}`,
+        { method: "PUT", credentials: "include", }
+      );
+      if (!response.ok) throw new Error("Failed to update discount");
+      fetchProducts(); 
+    } catch (error) {
+      console.error("Error updating discount:", error);
+      throw error;
+    }
+  };
+
   return {
     products,
     loading,
@@ -97,5 +111,6 @@ export const useAdminProducts = () => {
     deleteProduct,
     uploadImage,
     handlePageChange,
+    updateProductDiscount,
   };
 };

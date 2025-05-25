@@ -1,4 +1,35 @@
-const ProductTable = ({ products, onEdit, onDelete, onUploadImage }) => {
+import { useState } from 'react';
+
+const ProductTable = ({ products, onEdit, onDelete, onUploadImage, onUpdateDiscount }) => {
+  const [editingDiscountId, setEditingDiscountId] = useState(null);
+  const [discountValue, setDiscountValue] = useState('');
+
+  const handleDiscountEdit = (product) => {
+    setEditingDiscountId(product.productId);
+    setDiscountValue(product.discount.toString());
+  };
+
+  const handleDiscountSave = async (productId) => {
+    try {
+      const discount = parseFloat(discountValue);
+      if (isNaN(discount) || discount < 0 || discount > 100) {
+        alert('Please enter a valid discount between 0 and 100');
+        return;
+      }
+      
+      await onUpdateDiscount(productId, discount);
+      setEditingDiscountId(null);
+      setDiscountValue('');
+    } catch (error) {
+      alert('Failed to update discount: ' + error.message);
+    }
+  };
+
+  const handleDiscountCancel = () => {
+    setEditingDiscountId(null);
+    setDiscountValue('');
+  };
+
   return (
     <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
       <table className="w-full table-fixed">
@@ -13,10 +44,10 @@ const ProductTable = ({ products, onEdit, onDelete, onUploadImage }) => {
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
               Price
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+            <th className="px-12 py-3 text-left text-xs font-medium text-gray-500 uppercase">
               Discount
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
               Special Price
             </th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
@@ -56,11 +87,58 @@ const ProductTable = ({ products, onEdit, onDelete, onUploadImage }) => {
                 <td className="px-4 py-3 text-sm text-gray-600">
                   ${product.price}
                 </td>
-                <td className="px-4 py-3 text-sm text-gray-600">
-                  {product.discount}%
+                <td className="px-12 py-3 text-sm text-gray-600">
+                  {editingDiscountId === product.productId ? (
+                    <div className="flex flex-col items-center space-x-2">
+                      <input
+                        type="number"
+                        value={discountValue}
+                        onChange={(e) => setDiscountValue(e.target.value)}
+                        className="w-16 px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        autoFocus
+                      />
+                      <span className="text-xs">%</span>
+                      <div className="flex space-x-1">
+                        <button
+                          onClick={() => handleDiscountSave(product.productId)}
+                          className="p-1 text-green-600 hover:text-green-800 transition-colors"
+                          title="Save"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={handleDiscountCancel}
+                          className="p-1 text-gray-600 hover:text-gray-800 transition-colors"
+                          title="Cancel"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center space-x-2">
+                      <span>{product.discount}%</span>
+                      <button
+                        onClick={() => handleDiscountEdit(product)}
+                        className="p-1 text-gray-400 hover:text-indigo-600 transition-colors"
+                        title="Edit discount"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
+                      </button>
+                    </div>
+                  )}
                 </td>
-                <td className="px-4 py-3 text-sm text-gray-600">
-                  ${product.specialPrice}
+                <td className="px-6 py-3 text-sm text-gray-600">
+                ${Number(product.specialPrice).toFixed(2)}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-600">
                   {product.quantity}
@@ -83,26 +161,6 @@ const ProductTable = ({ products, onEdit, onDelete, onUploadImage }) => {
                           strokeLinejoin="round"
                           strokeWidth={2}
                           d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                        />
-                      </svg>
-                    </button>
-
-                    <button
-                      onClick={() => onUploadImage(product.productId)}
-                      className="p-1.5 text-blue-600 hover:text-blue-900 transition-colors"
-                      title="Upload Image"
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                         />
                       </svg>
                     </button>
