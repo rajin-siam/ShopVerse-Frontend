@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 
 import NavBar from "./common/components/layout/NavBar.jsx";
-import HomePage from "./pages/HomePage";
+import HomePage from "./features/home/HomePage.jsx";
 import ProductsPage from "./features/products/pages/ProductsPage.jsx";
 
 import ProductDetailsPage from "./features/products/pages/ProductDetailsPage.jsx";
