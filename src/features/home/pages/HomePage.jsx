@@ -7,7 +7,7 @@ import { fetchAllProducts } from '../../products/api/productsApi';
 import HeroSection from '../components/HeroSection';
 import ProductGrid from '../components/ProductGrid';
 import CategoryGrid from '../components/CategoryGrid';
-
+import { fetchCategories } from '../../categories/api/categoriesApi';
 const HomePage = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -27,7 +27,7 @@ const HomePage = () => {
       
       const [productsData, categoriesData] = await Promise.all([
         fetchProducts(),
-        fetchCategories()
+        fetchCategories(0,8)
       ]);
 
       setProducts(productsData.content || []);
@@ -47,15 +47,7 @@ const HomePage = () => {
     }
   };
 
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch(`${apiUrl}/public/categories?pageNumber=0&pageSize=8`);
-      if (!response.ok) throw new Error('Failed to fetch');
-      return await response.json();
-    } catch (error) {
-      return { content: [] };
-    }
-  };
+
 
   const handleCategoryClick = (categoryId) => {
     setSelectedCategory(categoryId);

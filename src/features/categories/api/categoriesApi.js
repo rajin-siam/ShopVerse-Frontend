@@ -1,4 +1,4 @@
-export async function fetchAllCategories(
+export async function fetchCategories(
   pageNumber = 0, 
   pageSize = 8,
   sortBy = "categoryName",
