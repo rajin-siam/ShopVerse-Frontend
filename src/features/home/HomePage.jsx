@@ -12,6 +12,7 @@ const HomePage = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
   const { user } = useAuth();
   const { setSelectedCategory } = useProducts();
@@ -48,7 +49,7 @@ const HomePage = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('http://localhost:8081/api/public/categories?pageNumber=0&pageSize=8');
+      const response = await fetch(`${apiUrl}/public/categories?pageNumber=0&pageSize=8`);
       if (!response.ok) throw new Error('Failed to fetch');
       return await response.json();
     } catch (error) {
