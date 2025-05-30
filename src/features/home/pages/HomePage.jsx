@@ -1,12 +1,12 @@
 // HomePage.jsx - Smart Component (Container)
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../common/contexts/AuthContext';
-import { useProducts } from '../../common/contexts/ProductsContext';
-import { fetchAllProducts } from '../products/api/productsApi';
+import { useAuth } from '../../../common/contexts/AuthContext';
+import { useProducts } from '../../../common/contexts/ProductsContext';
+import { fetchAllProducts } from '../../products/api/productsApi';
 
-import HeroSection from './HeroSection';
-import ProductGrid from './ProductGrid';
-import CategoryGrid from './CategoryGrid';
+import HeroSection from '../components/HeroSection';
+import ProductGrid from '../components/ProductGrid';
+import CategoryGrid from '../components/CategoryGrid';
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
