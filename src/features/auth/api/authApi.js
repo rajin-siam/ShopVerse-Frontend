@@ -55,4 +55,32 @@ export const signOutUser = async () => {
     console.error("Logout error:", err);
     throw new Error(err.message || "Failed to disconnect session");
   }
+
+
+  
+};
+
+
+// Google Authentication API Function
+// Add this to your authApi.js file
+
+export const googleLogin = async (tokenId) => {
+  try {
+    const response = await fetch("http://localhost:8081/api/auth/google", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: tokenId }),
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Google login failed");
+    }
+
+    return await response.json();
+  } catch (err) {
+    console.error("Google login error:", err);
+    throw new Error(err.message || "An unexpected error occurred");
+  }
 };

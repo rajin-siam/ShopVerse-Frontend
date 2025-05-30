@@ -1,6 +1,7 @@
 import React from 'react';
 import { Trash2, Plus, Minus } from 'lucide-react';
 
+// This is a pure presentational (dumb) component
 const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
   const { productName, quantity, price, image } = item;
   const subtotal = price * quantity;
@@ -8,7 +9,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden">
       <div className="p-4 sm:p-6 flex flex-col sm:flex-row gap-6">
-        {/* Product Image (placeholder) */}
+        {/* Product Image */}
         <div className="w-full sm:w-24 h-24 bg-gray-100 rounded-lg flex-shrink-0">
           {image ? (
             <img 
@@ -30,26 +31,11 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
           
           <div className="flex flex-wrap items-center justify-between gap-4">
             {/* Quantity Controls */}
-            <div className="flex items-center">
-              <button
-                onClick={() => onUpdateQuantity('delete')}
-                disabled={quantity <= 1}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                aria-label="Decrease quantity"
-              >
-                <Minus size={16} />
-              </button>
-              
-              <span className="mx-3 w-8 text-center font-medium">{quantity}</span>
-              
-              <button
-                onClick={() => onUpdateQuantity('add')}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors"
-                aria-label="Increase quantity"
-              >
-                <Plus size={16} />
-              </button>
-            </div>
+            <QuantityControls 
+              quantity={quantity}
+              onDecrease={() => onUpdateQuantity('delete')}
+              onIncrease={() => onUpdateQuantity('add')}
+            />
             
             {/* Subtotal and Remove */}
             <div className="flex items-center gap-4">
@@ -69,5 +55,29 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
     </div>
   );
 };
+
+// Even smaller presentational component
+const QuantityControls = ({ quantity, onDecrease, onIncrease }) => (
+  <div className="flex items-center">
+    <button
+      onClick={onDecrease}
+      disabled={quantity <= 1}
+      className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+      aria-label="Decrease quantity"
+    >
+      <Minus size={16} />
+    </button>
+    
+    <span className="mx-3 w-8 text-center font-medium">{quantity}</span>
+    
+    <button
+      onClick={onIncrease}
+      className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors"
+      aria-label="Increase quantity"
+    >
+      <Plus size={16} />
+    </button>
+  </div>
+);
 
 export default CartItem;

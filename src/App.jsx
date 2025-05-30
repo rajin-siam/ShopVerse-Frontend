@@ -27,7 +27,8 @@ import AdminDashboardPage from "./features/admin/pages/AdminDashboardPage.jsx";
 import ProductsManagementPage from "./features/admin/pages/ProductsManagementPage.jsx";
 import CategoriesManagementPage from "./features/admin/pages/CategoriesManagementPage.jsx";
 import OrderManagement from "./features/admin/components/Orders/OrderManagement.jsx";
-
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import UserProfilePage from "./features/user/pages/UserProfilePage.jsx";
 function App() {
   const PrivateRoute = ({ children }) => {
     const { user, loading } = useAuth();
@@ -52,78 +53,92 @@ function App() {
     return children;
   };
   return (
-    <AuthProvider>
-      <CartProvider>
-        <Router>
-          <Toaster />
-          <NavBar />
-          <div className="container mx-auto px-4">
+    <GoogleOAuthProvider clientId="490184832474-47nbop45u4kcunld04aafg2f40o3ptdv.apps.googleusercontent.com">
+      <ProductsProvider>
+      <AuthProvider>
+        <CartProvider>
+          <Router>
+            <Toaster />
+            <NavBar />
             <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route
-                path="/products"
-                element={
-                  <ProductsProvider>
-                    <ProductsPage />
-                  </ProductsProvider>
-                }
-              />
-              <Route
-                path="/product/:productId"
-                element={<ProductDetailsPage />}
-              />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/signup" element={<SignupPage />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-
-              {/* Protected Routes */}
-              <Route
-                path="/cart"
-                element={
-                  <PrivateRoute>
-                    <CartPage />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/checkout"
-                element={
-                  <PrivateRoute>
-                    <CheckoutPage />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/confirmation/:orderId"
-                element={
-                  <PrivateRoute>
-                    <OrderConfirmation />
-                  </PrivateRoute>
-                }
-              />
-
-              <Route
-                path="/admin"
-                element={
-                  <AdminRoute>
-                    <AdminLayout />
-                  </AdminRoute>
-                }
-              >
-                <Route index element={<AdminDashboardPage />} />
-                <Route path="products" element={<ProductsManagementPage />} />
-                <Route
-                  path="categories"
-                  element={<CategoriesManagementPage />}
-                />
-                <Route path="orders" element={<OrderManagement />} />
-              </Route>
+            <Route path="/" element={<HomePage />} />
             </Routes>
-          </div>
-        </Router>
-      </CartProvider>
-    </AuthProvider>
+            <div className="container mx-auto px-4">
+              <Routes>
+                <Route
+                  path="/products"
+                  element={
+                    
+                      <ProductsPage />
+                  }
+                />
+                <Route
+                  path="/product/:productId"
+                  element={<ProductDetailsPage />}
+                />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/signup" element={<SignupPage />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+
+                {/* Protected Routes */}
+                <Route
+                  path="/cart"
+                  element={
+                    <PrivateRoute>
+                      <CartPage />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/checkout"
+                  element={
+                    <PrivateRoute>
+                      <CheckoutPage />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/confirmation/:orderId"
+                  element={
+                    <PrivateRoute>
+                      <OrderConfirmation />
+                    </PrivateRoute>
+                  }
+                />
+
+                <Route
+                  path="/profile"
+                  element={
+                    <PrivateRoute>
+                      <UserProfilePage />
+                    </PrivateRoute>
+                  }
+                />
+
+                <Route
+                  path="/admin"
+                  element={
+                    <AdminRoute>
+                      <AdminLayout />
+                    </AdminRoute>
+                  }
+                >
+                  <Route index element={<AdminDashboardPage />} />
+                  <Route path="products" element={<ProductsManagementPage />} />
+                  <Route
+                    path="categories"
+                    element={<CategoriesManagementPage />}
+                  />
+                  <Route path="orders" element={<OrderManagement />} />
+                </Route>
+              </Routes>
+            </div>
+          </Router>
+        </CartProvider>
+      </AuthProvider>
+      </ProductsProvider>
+    </GoogleOAuthProvider>
   );
 }
 

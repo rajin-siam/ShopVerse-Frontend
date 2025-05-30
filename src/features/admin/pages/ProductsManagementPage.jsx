@@ -19,7 +19,8 @@ const ProductsManagementPage = () => {
     updateProduct,
     deleteProduct,
     uploadImage,
-    handlePageChange
+    handlePageChange,
+    updateProductDiscount,
   } = useAdminProducts();
 
   const [categories, setCategories] = useState([]);
@@ -100,6 +101,7 @@ const ProductsManagementPage = () => {
                 onEdit={(product) => handleModal("Edit", product)}
                 onDelete={deleteProduct}
                 onUploadImage={(productId) => handleModal("Upload", { productId })}
+                onUpdateDiscount={updateProductDiscount} 
               />
             </div>
 
