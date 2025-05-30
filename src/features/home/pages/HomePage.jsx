@@ -1,17 +1,18 @@
 // HomePage.jsx - Smart Component (Container)
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../common/contexts/AuthContext';
-import { useProducts } from '../../common/contexts/ProductsContext';
-import { fetchAllProducts } from '../products/api/productsApi';
+import { useAuth } from '../../../common/contexts/AuthContext';
+import { useProducts } from '../../../common/contexts/ProductsContext';
+import { fetchAllProducts } from '../../products/api/productsApi';
 
-import HeroSection from './HeroSection';
-import ProductGrid from './ProductGrid';
-import CategoryGrid from './CategoryGrid';
-
+import HeroSection from '../components/HeroSection';
+import ProductGrid from '../components/ProductGrid';
+import CategoryGrid from '../components/CategoryGrid';
+import { fetchCategories } from '../../categories/api/categoriesApi';
 const HomePage = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
   const { user } = useAuth();
   const { setSelectedCategory } = useProducts();
@@ -26,7 +27,7 @@ const HomePage = () => {
       
       const [productsData, categoriesData] = await Promise.all([
         fetchProducts(),
-        fetchCategories()
+        fetchCategories(0,8)
       ]);
 
       setProducts(productsData.content || []);
@@ -46,15 +47,7 @@ const HomePage = () => {
     }
   };
 
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch('http://localhost:8081/api/public/categories?pageNumber=0&pageSize=8');
-      if (!response.ok) throw new Error('Failed to fetch');
-      return await response.json();
-    } catch (error) {
-      return { content: [] };
-    }
-  };
+
 
   const handleCategoryClick = (categoryId) => {
     setSelectedCategory(categoryId);
