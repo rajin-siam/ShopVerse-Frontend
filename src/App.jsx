@@ -60,11 +60,9 @@ function App() {
           <Router>
             <Toaster />
             <NavBar />
-            <Routes>
-            <Route path="/" element={<HomePage />} />
-            </Routes>
             <div className="container mx-auto px-4">
               <Routes>
+                <Route path="/" element={<HomePage />} />
                 <Route
                   path="/products"
                   element={
