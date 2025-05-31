@@ -1,16 +1,12 @@
 import React from "react";
 import ProductGrid from "../components/ProductGrid";
-import ProductList from "../components/ProductList";
 import { SearchBar } from "../../../common/components/ui/SearchBar";
 import CategoryFilter from "../components/CategoryFilter/CategoryFilter";
 import { useProducts } from "../../../common/contexts/ProductsContext";
-import { LayoutGrid, List } from "lucide-react";
 
 const ProductsPage = () => {
   const {
     searchQuery,
-    view,
-    setView,
     setSearchQuery,
     setSelectedCategory,
     selectedCategory,
@@ -27,36 +23,10 @@ const ProductsPage = () => {
         <header className="mb-6">
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-2xl font-bold text-gray-900">Our Products</h1>
-            
-            {/* View toggle buttons */}
-            <div className="inline-flex shadow-sm rounded-md">
-              <button
-                onClick={() => setView("grid")}
-                className={`relative inline-flex items-center px-3 py-1.5 rounded-l-md border border-gray-300 text-sm font-medium focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 ${
-                  view === "grid" 
-                    ? "bg-indigo-600 text-white border-indigo-600" 
-                    : "bg-white text-gray-700 hover:bg-gray-50"
-                }`}
-              >
-                <LayoutGrid className="h-4 w-4 mr-1.5" />
-                Grid
-              </button>
-              <button
-                onClick={() => setView("list")}
-                className={`relative inline-flex items-center px-3 py-1.5 rounded-r-md border border-gray-300 text-sm font-medium focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 ${
-                  view === "list" 
-                    ? "bg-indigo-600 text-white border-indigo-600" 
-                    : "bg-white text-gray-700 hover:bg-gray-50"
-                }`}
-              >
-                <List className="h-4 w-4 mr-1.5" />
-                List
-              </button>
-            </div>
           </div>
           
           {/* Search and Filters Row */}
-          <div className="flex flex-col  gap-4 items-start ">
+          <div className="flex flex-col gap-4 items-start ">
             {/* Search Bar */}
             <div className="w-full lg:w-1/2">
               <SearchBar 
@@ -92,13 +62,10 @@ const ProductsPage = () => {
                 )}
               </h2>
             </div>
-            <div className="text-xs text-gray-500 mt-1 lg:mt-0">
-              Showing products in {view === "grid" ? "grid" : "list"} view
-            </div>
           </div>
           
-          {/* Display products in the selected view */}
-          {view === "grid" ? <ProductGrid /> : <ProductList />}
+          {/* Display products in grid view */}
+          <ProductGrid />
         </div>
       </div>
     </div>

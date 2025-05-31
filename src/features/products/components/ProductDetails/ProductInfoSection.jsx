@@ -17,6 +17,7 @@ const ProductInfoSection = ({
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           {product.productName}
         </h1>
+        
         <div className="flex items-center gap-4 mb-4">
           <div className="flex items-baseline">
             <span className="text-3xl font-bold text-indigo-600">
@@ -29,20 +30,16 @@ const ProductInfoSection = ({
             )}
           </div>
 
-          {/* Stock indicator */}
-          {product.quantity > 0 ? (
-            <span className="px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">
-              In Stock
-            </span>
-          ) : (
-            <span className="px-3 py-1 bg-red-100 text-red-800 text-sm font-medium rounded-full">
-              Out of Stock
-            </span>
-          )}
+          <span className={`px-3 py-1 text-sm font-medium rounded-full ${
+            product.quantity > 0
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-800"
+          }`}>
+            {product.quantity > 0 ? "In Stock" : "Out of Stock"}
+          </span>
         </div>
       </div>
 
-      {/* Short description - first point only */}
       {descriptionPoints.length > 0 && (
         <div className="mb-8">
           <p className="text-gray-600">{descriptionPoints[0]}</p>
@@ -51,7 +48,6 @@ const ProductInfoSection = ({
 
       <div className="mb-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-end">
-          {/* Quantity selector */}
           <ProductQuantitySelector
             quantity={quantity}
             onQuantityChange={onQuantityChange}
@@ -59,7 +55,6 @@ const ProductInfoSection = ({
             onDecrease={onDecrease}
           />
 
-          {/* Add to cart button */}
           <AddToCartButton
             isAvailable={product.quantity > 0}
             onAddToCart={onAddToCart}

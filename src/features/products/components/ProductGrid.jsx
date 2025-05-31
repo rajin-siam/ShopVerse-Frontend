@@ -25,31 +25,18 @@ const ProductGrid = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        {products.map((product) => {
-          // Add rating data for demonstration
-          const enhancedProduct = {
-            ...product,
-            averageRating: (Math.random() * 2 + 3).toFixed(1), // Random rating between 3.0-5.0
-            ratingCount: Math.floor(Math.random() * 200) + 10 // Random count between 10-210
-          };
-          
-          return (
-            <Product
-              key={product.productId}
-              product={enhancedProduct}
-            />
-          );
-        })}
-      </div>
+      {!isLoading && products.length > 0 && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          {products.map((product) => (
+            <Product key={product.productId} product={product} />
+          ))}
+        </div>
+      )}
 
       {!isLoading && products.length === 0 && (
         <div className="text-center py-12">
           <div className="mx-auto max-w-md">
-            <Package 
-              className="mx-auto h-12 w-12 text-gray-400"
-              strokeWidth={1.5}
-            />
+            <Package className="mx-auto h-12 w-12 text-gray-400" strokeWidth={1.5} />
             <p className="mt-4 text-gray-500 text-base">
               No products found matching your criteria
             </p>
