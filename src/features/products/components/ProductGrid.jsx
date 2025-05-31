@@ -1,27 +1,60 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Product from "./Product";
-import Pagination from "../../../common/components/ui/Pagination";
-import { useProducts } from "../../../common/contexts/ProductsContext";
-import { useProductFetcher } from "../../../common/hooks/useProductFetcher";
-import { Package } from "lucide-react";
+import { fetchAllProducts } from "../api/productsApi";
+import { Package, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+
+const PAGE_SIZE = 15; // Number of products per page
 
 const ProductGrid = () => {
-  const { pageNumber, setPageNumber, setTotalPages } = useProducts();
-  const { products, totalPages, isLoading, error } = useProductFetcher();
-  
-  // Sync total pages from API response to context
-  useEffect(() => {
-    if (totalPages > 0) {
-      setTotalPages(totalPages);
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const loadProducts = async (page) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const data = await fetchAllProducts(page, PAGE_SIZE);
+      setProducts(data.content || []);
+      setTotalPages(data.totalPages || 0);
+    } catch (err) {
+      setError(err.message || "Failed to load products");
+      setProducts([]);
+    } finally {
+      setIsLoading(false);
     }
-  }, [totalPages, setTotalPages]);
+  };
 
+  useEffect(() => {
+    loadProducts(currentPage);
+  }, [currentPage]);
 
-  // Handle page change with validation
   const handlePageChange = (newPage) => {
     if (newPage >= 0 && newPage < totalPages) {
-      setPageNumber(newPage);
+      setCurrentPage(newPage);
     }
+  };
+
+  // Generate page buttons array
+  const getPageButtons = () => {
+    const buttons = [];
+    
+    // Always include current page
+    buttons.push(currentPage);
+    
+    // Add previous page if it exists
+    if (currentPage > 0) {
+      buttons.unshift(currentPage - 1);
+    }
+    
+    // Add next page if it exists
+    if (currentPage < totalPages - 1) {
+      buttons.push(currentPage + 1);
+    }
+    
+    return buttons;
   };
 
   return (
@@ -44,11 +77,89 @@ const ProductGrid = () => {
 
       {/* Products grid */}
       {!isLoading && products.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {products.map((product) => (
-            <Product key={product.productId} product={product} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {products.map((product) => (
+              <Product key={product.productId} product={product} />
+            ))}
+          </div>
+
+          {/* Pagination controls */}
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center mt-8 space-x-2">
+              {/* First page button */}
+              <button
+                onClick={() => handlePageChange(0)}
+                disabled={currentPage === 0}
+                className={`p-2 rounded ${
+                  currentPage === 0
+                    ? "text-gray-400 cursor-not-allowed"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+                aria-label="First page"
+              >
+                <ChevronsLeft size={18} />
+              </button>
+
+              {/* Previous page button */}
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 0}
+                className={`p-2 rounded ${
+                  currentPage === 0
+                    ? "text-gray-400 cursor-not-allowed"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+                aria-label="Previous page"
+              >
+                <ChevronLeft size={18} />
+              </button>
+
+              {/* Page number buttons */}
+              {getPageButtons().map((page) => (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  className={`px-3 py-1 rounded ${
+                    currentPage === page
+                      ? "bg-indigo-600 text-white"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  {page + 1}
+                </button>
+              ))}
+
+              {/* Next page button */}
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages - 1}
+                className={`p-2 rounded ${
+                  currentPage === totalPages - 1
+                    ? "text-gray-400 cursor-not-allowed"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+                aria-label="Next page"
+              >
+                <ChevronRight size={18} />
+              </button>
+
+              {/* Last page button */}
+              <button
+                onClick={() => handlePageChange(totalPages - 1)}
+                disabled={currentPage === totalPages - 1}
+                className={`p-2 rounded ${
+                  currentPage === totalPages - 1
+                    ? "text-gray-400 cursor-not-allowed"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+                aria-label="Last page"
+              >
+                <ChevronsRight size={18} />
+              </button>
+            </div>
+          )}
+        </>
       )}
 
       {/* Empty state */}
@@ -63,18 +174,6 @@ const ProductGrid = () => {
               Try adjusting your search or filter options
             </p>
           </div>
-        </div>
-      )}
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="mt-10 flex justify-center">
-          <Pagination
-            currentPage={pageNumber}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-            className="bg-white rounded-lg shadow-sm p-2"
-          />
         </div>
       )}
     </div>
