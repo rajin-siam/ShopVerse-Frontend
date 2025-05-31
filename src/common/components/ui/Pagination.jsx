@@ -1,128 +1,115 @@
-import React, { useEffect, useState } from "react";
-import { PAGINATION_CONFIG } from "../../../common/constants/config";
+import React, { useState, useEffect } from "react";
 
 const Pagination = ({
-  pageNumber,
+  currentPage,
   totalPages,
-  setPageNumber,
+  onPageChange,
   className = "",
-  pageItemClassName = "",
-  activePageClassName = "",
 }) => {
-  const { DEFAULT_VISIBLE_PAGES = 5 } = PAGINATION_CONFIG;
-  const [isMobile, setIsMobile] = useState(false);
-  const [visiblePages, setVisiblePages] = useState(DEFAULT_VISIBLE_PAGES);
-
+  const [visiblePages, setVisiblePages] = useState(5);
+  
+  // Handle window resize for responsive design
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-      setVisiblePages(window.innerWidth < 768 ? 3 : DEFAULT_VISIBLE_PAGES);
+      setVisiblePages(window.innerWidth < 640 ? 3 : 5);
     };
     
     handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [DEFAULT_VISIBLE_PAGES]);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
-  const handlePageChange = (newPage) => {
-    if (newPage >= 0 && newPage < totalPages) {
-      setPageNumber(newPage);
-    }
-  };
-
-  const renderPageNumbers = () => {
-    let startPage = Math.max(0, pageNumber - Math.floor(visiblePages / 2));
+  
+  if (totalPages <= 1) return null;
+  
+  // Calculate page range to display
+  const getPageRange = () => {
+    const halfVisible = Math.floor(visiblePages / 2);
+    let startPage = Math.max(0, currentPage - halfVisible);
     let endPage = Math.min(totalPages - 1, startPage + visiblePages - 1);
     
+    // Adjust start page if end page is maxed out
     if (endPage === totalPages - 1) {
       startPage = Math.max(0, endPage - visiblePages + 1);
     }
-
+    
     const pages = [];
     
+    // Add first page and ellipsis if needed
     if (startPage > 0) {
-      pages.push(
-        <button
-          key={0}
-          onClick={() => handlePageChange(0)}
-          className={`${pageItemClassName} mx-1 px-3 py-1 rounded-md transition-all 
-            hover:bg-gray-100 hover:text-indigo-600`}
-        >
-          1
-        </button>
-      );
+      pages.push(0); // First page
       if (startPage > 1) {
-        pages.push(
-          <span key="start-ellipsis" className="px-2 text-gray-400">
-            ...
-          </span>
-        );
+        pages.push('ellipsis-start');
       }
     }
-
-    // Add visible pages
-    for (let page = startPage; page <= endPage; page++) {
-      pages.push(
-        <button
-          key={page}
-          onClick={() => handlePageChange(page)}
-          className={`${pageItemClassName} ${
-            page === pageNumber 
-              ? `${activePageClassName} bg-indigo-600 text-white`
-              : 'hover:bg-gray-100 hover:text-indigo-600 text-gray-700'
-          } mx-1 px-3 md:px-4 py-1 rounded-md transition-all min-w-[2rem]`}
-        >
-          {page + 1}
-        </button>
-      );
+    
+    // Add visible page numbers
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
     }
-
-    // Add last page and ellipsis if needed
+    
+    // Add ellipsis and last page if needed
     if (endPage < totalPages - 1) {
       if (endPage < totalPages - 2) {
-        pages.push(
-          <span key="end-ellipsis" className="px-2 text-gray-400">
-            ...
-          </span>
-        );
+        pages.push('ellipsis-end');
       }
-      pages.push(
-        <button
-          key={totalPages - 1}
-          onClick={() => handlePageChange(totalPages - 1)}
-          className={`${pageItemClassName} mx-1 px-3 py-1 rounded-md transition-all 
-            hover:bg-gray-100 hover:text-indigo-600`}
-        >
-          {totalPages}
-        </button>
-      );
+      pages.push(totalPages - 1); // Last page
     }
-
+    
     return pages;
   };
 
   return (
-    <div className={`flex flex-wrap justify-center items-center gap-2 ${className}`}>
+    <div className={`flex items-center justify-center space-x-2 ${className}`}>
+      {/* Previous button */}
       <button
-        onClick={() => handlePageChange(pageNumber - 1)}
-        className={`${pageItemClassName} px-3 md:px-4 py-2 rounded-md 
-          transition-all hover:bg-gray-100 text-gray-700 mr-4
-          ${pageNumber === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
-        disabled={pageNumber === 0}
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 0}
+        className={`px-3 py-1 rounded-md text-sm ${
+          currentPage === 0
+            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+            : "bg-white text-gray-700 hover:bg-gray-100"
+        }`}
       >
-        {isMobile ? '←' : 'Previous'}
+        Previous
       </button>
-
-      {renderPageNumbers()}
-
+      
+      {/* Page numbers */}
+      {getPageRange().map((page, index) => {
+        if (page === 'ellipsis-start' || page === 'ellipsis-end') {
+          return (
+            <span key={page} className="px-2 text-gray-400">
+              ...
+            </span>
+          );
+        }
+        
+        return (
+          <button
+            key={index}
+            onClick={() => onPageChange(page)}
+            className={`w-8 h-8 rounded-md text-sm ${
+              currentPage === page
+                ? "bg-indigo-600 text-white"
+                : "bg-white text-gray-700 hover:bg-gray-100"
+            }`}
+          >
+            {page + 1}
+          </button>
+        );
+      })}
+      
+      {/* Next button */}
       <button
-        onClick={() => handlePageChange(pageNumber + 1)}
-        className={`${pageItemClassName} px-3 md:px-4 py-2 rounded-md 
-          transition-all hover:bg-gray-100 text-gray-700
-          ${pageNumber === totalPages - 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
-        disabled={pageNumber === totalPages - 1}
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages - 1}
+        className={`px-3 py-1 rounded-md text-sm ${
+          currentPage === totalPages - 1
+            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+            : "bg-white text-gray-700 hover:bg-gray-100"
+        }`}
       >
-        {isMobile ? '→' : 'Next'}
+        Next
       </button>
     </div>
   );

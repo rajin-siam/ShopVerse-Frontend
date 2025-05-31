@@ -5,17 +5,7 @@ import CategoryFilter from "../components/CategoryFilter/CategoryFilter";
 import { useProducts } from "../../../common/contexts/ProductsContext";
 
 const ProductsPage = () => {
-  const {
-    searchQuery,
-    setSearchQuery,
-    setSelectedCategory,
-    selectedCategory,
-    setPageNumber,
-  } = useProducts();
-
-  React.useEffect(() => {
-    setPageNumber(0); // Reset to first page on search query or category change
-  }, [searchQuery, selectedCategory, setPageNumber]);
+  const { setSearchQuery, setSelectedCategory } = useProducts();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -26,7 +16,7 @@ const ProductsPage = () => {
           </div>
           
           {/* Search and Filters Row */}
-          <div className="flex flex-col gap-4 items-start ">
+          <div className="flex flex-col gap-4 items-start">
             {/* Search Bar */}
             <div className="w-full lg:w-1/2">
               <SearchBar 
@@ -47,26 +37,37 @@ const ProductsPage = () => {
         {/* Products */}
         <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
           {/* Active filters & Results summary */}
-          <div className="mb-4 pb-4 border-b border-gray-100 flex flex-wrap items-center justify-between">
-            <div>
-              <h2 className="text-sm font-medium text-gray-700">
-                {searchQuery && (
-                  <span className="mr-2">
-                    Results for: <span className="text-indigo-600">"{searchQuery}"</span>
-                  </span>
-                )}
-                {selectedCategory && (
-                  <span className="mr-2">
-                    Category: <span className="text-indigo-600">{selectedCategory}</span>
-                  </span>
-                )}
-              </h2>
-            </div>
-          </div>
+          <ActiveFilters />
           
           {/* Display products in grid view */}
           <ProductGrid />
         </div>
+      </div>
+    </div>
+  );
+};
+
+// Component to display active filters
+const ActiveFilters = () => {
+  const { searchQuery, selectedCategory } = useProducts();
+  
+  if (!searchQuery && !selectedCategory) return null;
+  
+  return (
+    <div className="mb-4 pb-4 border-b border-gray-100 flex flex-wrap items-center justify-between">
+      <div>
+        <h2 className="text-sm font-medium text-gray-700">
+          {searchQuery && (
+            <span className="mr-2">
+              Results for: <span className="text-indigo-600">"{searchQuery}"</span>
+            </span>
+          )}
+          {selectedCategory && (
+            <span className="mr-2">
+              Category: <span className="text-indigo-600">{selectedCategory}</span>
+            </span>
+          )}
+        </h2>
       </div>
     </div>
   );
