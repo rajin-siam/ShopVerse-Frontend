@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { API_CONFIG } from "../../../common/constants/config";
 
 export const AddressStep = ({ onNext }) => {
   const [formData, setFormData] = useState({
@@ -18,7 +19,7 @@ export const AddressStep = ({ onNext }) => {
     setLoading(true);
     
     try {
-      const response = await fetch("http://localhost:8081/api/addresses", {
+      const response = await fetch(`${API_CONFIG.BASE_URL}/addresses`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

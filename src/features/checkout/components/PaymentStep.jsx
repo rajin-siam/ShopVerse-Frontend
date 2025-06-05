@@ -6,6 +6,7 @@ import {
   useStripe,
   useElements
 } from "@stripe/react-stripe-js";
+import { API_CONFIG } from "../../../common/constants/config";
 
 // Load Stripe outside of component render cycle (important!)
 const stripePromise = loadStripe("pk_test_51RLfs6Q0a3A1oMbPUDHCcTmXuDhlrA4MUZCJ9gYppOQDs4cRcZwbTkzveuSyAOF0suNZjTLjo5w8lcU1lj4uNPx700MRHBZ6ZK");
@@ -20,7 +21,7 @@ const StripeCheckoutForm = ({ onBack, onNext }) => {
 
   useEffect(() => {
     // Create PaymentIntent as soon as the page loads
-    fetch("http://localhost:8081/api/payments/create-payment-intent", {
+    fetch(`${API_CONFIG.BASE_URL}/payments/create-payment-intent`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include"

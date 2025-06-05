@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./CategoryFilter.css"; // Create this CSS file
+import { API_CONFIG } from "../../../../common/constants/config";
 
 const CategoryFilter = ({ onCategorySelect }) => {
   const [categories, setCategories] = useState([]);
@@ -10,7 +11,7 @@ const CategoryFilter = ({ onCategorySelect }) => {
       setIsLoading(true);
       try {
         const res = await fetch(
-          "http://localhost:8081/api/public/categories?pageNumber=0&pageSize=30&sortBy=categoryName&sortOrder=desc"
+          `${API_CONFIG.BASE_URL}/public/categories?pageNumber=0&pageSize=30&sortBy=categoryName&sortOrder=desc`
         );
         const data = await res.json();
         setCategories(data.content);

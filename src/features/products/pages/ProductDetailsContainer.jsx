@@ -14,6 +14,7 @@ import ProductSpecifications from "../components/ProductDetails/ProductSpecifica
 import ProductDescription from "../components/ProductDetails/ProductDescription";
 import ProductReviews from "./ProductReviews";
 import WishlistAndShareButtons from "../components/ProductDetails/WishlistAndShareButtons";
+import { API_CONFIG } from "../../../common/constants/config";
 
 const ProductDetailsContainer = ({ productId }) => {
   const [product, setProduct] = useState(null);
@@ -34,7 +35,7 @@ const ProductDetailsContainer = ({ productId }) => {
         
         // Check wishlist status
         const response = await fetch(
-          `http://localhost:8081/api/public/wishlist/check/${productId}`,
+          `${API_CONFIG.BASE_URL}/public/wishlist/check/${productId}`,
           { credentials: "include" }
         );
         const data = await response.json();
@@ -56,8 +57,8 @@ const ProductDetailsContainer = ({ productId }) => {
   const toggleWishlist = async () => {
     try {
       const endpoint = isInWishlist
-        ? `http://localhost:8081/api/public/wishlist/remove/${productId}`
-        : `http://localhost:8081/api/public/wishlist/add/${productId}`;
+        ? `${API_CONFIG.BASE_URL}/public/wishlist/remove/${productId}`
+        : `${API_CONFIG.BASE_URL}/public/wishlist/add/${productId}`;
       
       const method = isInWishlist ? "DELETE" : "POST";
       
