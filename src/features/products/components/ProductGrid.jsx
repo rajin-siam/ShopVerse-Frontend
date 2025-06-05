@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Product from "./Product";
-import { fetchAllProducts } from "../api/productsApi";
+import { fetchAllProducts, fetchProductsByKeyword, fetchProductsByCategoryId } from "../api/productsApi";
 import { Package, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { useProducts } from "../../../common/contexts/ProductsContext";
 
 const PAGE_SIZE = 15; // Number of products per page
 
@@ -9,31 +10,55 @@ const ProductGrid = () => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
+
+  // Get search and filter values from context
+  const { searchQuery, selectedCategory, pageNumber, setPageNumber, totalPages ,setTotalPages } = useProducts();
 
   const loadProducts = async (page) => {
     setIsLoading(true);
     setError(null);
+    
     try {
-      const data = await fetchAllProducts(page, PAGE_SIZE);
+      let data;
+      
+      // Choose which API to call based on filters
+      if (searchQuery && searchQuery.trim()) {
+        console.log('Fetching products by search:', searchQuery);
+        data = await fetchProductsByKeyword(searchQuery.trim(), page, PAGE_SIZE);
+      } else if (selectedCategory) {
+        console.log('Fetching products by category:', selectedCategory);
+        data = await fetchProductsByCategoryId(selectedCategory, page, PAGE_SIZE);
+      } else {
+        console.log('Fetching all products');
+        data = await fetchAllProducts(page, PAGE_SIZE);
+      }
+      
       setProducts(data.content || []);
       setTotalPages(data.totalPages || 0);
+      
+      // Update context with total pages
+      if (setTotalPages) {
+        setTotalPages(data.totalPages || 0);
+      }
+      
     } catch (err) {
+      console.error('Error loading products:', err);
       setError(err.message || "Failed to load products");
       setProducts([]);
+      setTotalPages(0);
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Load products when page, search, or category changes
   useEffect(() => {
-    loadProducts(currentPage);
-  }, [currentPage]);
+    loadProducts(pageNumber);
+  }, [pageNumber, searchQuery, selectedCategory]);
 
   const handlePageChange = (newPage) => {
-    if (newPage >= 0 && newPage < totalPages) {
-      setCurrentPage(newPage);
+    if (newPage >= 0 && newPage < totalPages && setPageNumber) {
+      setPageNumber(newPage);
     }
   };
 
@@ -42,16 +67,16 @@ const ProductGrid = () => {
     const buttons = [];
     
     // Always include current page
-    buttons.push(currentPage);
+    buttons.push(pageNumber);
     
     // Add previous page if it exists
-    if (currentPage > 0) {
-      buttons.unshift(currentPage - 1);
+    if (pageNumber > 0) {
+      buttons.unshift(pageNumber - 1);
     }
     
     // Add next page if it exists
-    if (currentPage < totalPages - 1) {
-      buttons.push(currentPage + 1);
+    if (pageNumber < totalPages - 1) {
+      buttons.push(pageNumber + 1);
     }
     
     return buttons;
@@ -90,9 +115,9 @@ const ProductGrid = () => {
               {/* First page button */}
               <button
                 onClick={() => handlePageChange(0)}
-                disabled={currentPage === 0}
+                disabled={pageNumber === 0}
                 className={`p-2 rounded ${
-                  currentPage === 0
+                  pageNumber === 0
                     ? "text-gray-400 cursor-not-allowed"
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
@@ -103,10 +128,10 @@ const ProductGrid = () => {
 
               {/* Previous page button */}
               <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 0}
+                onClick={() => handlePageChange(pageNumber - 1)}
+                disabled={pageNumber === 0}
                 className={`p-2 rounded ${
-                  currentPage === 0
+                  pageNumber === 0
                     ? "text-gray-400 cursor-not-allowed"
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
@@ -121,7 +146,7 @@ const ProductGrid = () => {
                   key={page}
                   onClick={() => handlePageChange(page)}
                   className={`px-3 py-1 rounded ${
-                    currentPage === page
+                    pageNumber === page
                       ? "bg-indigo-600 text-white"
                       : "text-gray-700 hover:bg-gray-100"
                   }`}
@@ -132,10 +157,10 @@ const ProductGrid = () => {
 
               {/* Next page button */}
               <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages - 1}
+                onClick={() => handlePageChange(pageNumber + 1)}
+                disabled={pageNumber === totalPages - 1}
                 className={`p-2 rounded ${
-                  currentPage === totalPages - 1
+                  pageNumber === totalPages - 1
                     ? "text-gray-400 cursor-not-allowed"
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
@@ -147,9 +172,9 @@ const ProductGrid = () => {
               {/* Last page button */}
               <button
                 onClick={() => handlePageChange(totalPages - 1)}
-                disabled={currentPage === totalPages - 1}
+                disabled={pageNumber === totalPages - 1}
                 className={`p-2 rounded ${
-                  currentPage === totalPages - 1
+                  pageNumber === totalPages - 1
                     ? "text-gray-400 cursor-not-allowed"
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
