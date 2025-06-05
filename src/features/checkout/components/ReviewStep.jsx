@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { API_CONFIG } from "../../../common/constants/config";
 
 export const ReviewStep = ({ address, payment, onBack, onConfirm, loading }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -9,7 +10,7 @@ export const ReviewStep = ({ address, payment, onBack, onConfirm, loading }) => 
   useEffect(() => {
     const fetchCartData = async () => {
       try {
-        const response = await fetch("http://localhost:8081/api/carts/users/cart", {
+        const response = await fetch(`${API_CONFIG.BASE_URL}/carts/users/cart`, {
           credentials: "include"
         });
         

@@ -4,7 +4,7 @@ import { useAuth } from "../../../common/contexts/AuthContext";
 import ReviewList from "../components/ProductDetails/ReviewList";
 import ReviewForm from "../components/ProductDetails/ReviewForm";
 import NoReviews from "../components/ProductDetails/NoReviews";
-
+import { API_CONFIG } from "../../../common/constants/config";
 const ProductReviewsContainer = ({ productId }) => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +17,7 @@ const ProductReviewsContainer = ({ productId }) => {
   const fetchReviews = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:8081/api/public/reviews/product/${productId}`);
+      const response = await fetch(`${API_CONFIG.BASE_URL}/public/reviews/product/${productId}`);
       
       if (!response.ok) {
         throw new Error("Failed to fetch reviews");
@@ -39,7 +39,7 @@ const ProductReviewsContainer = ({ productId }) => {
     if (!user) return;
     
     try {
-      const response = await fetch(`http://localhost:8081/api/public/reviews/my-review/product/${productId}`, {
+      const response = await fetch(`${API_CONFIG.BASE_URL}/public/reviews/my-review/product/${productId}`, {
         credentials: 'include',
       });
       
@@ -66,8 +66,8 @@ const ProductReviewsContainer = ({ productId }) => {
     try {
       const method = userReview ? "PUT" : "POST";
       const url = userReview 
-        ? `http://localhost:8081/api/public/reviews/${userReview.id}`
-        : "http://localhost:8081/api/public/reviews";
+        ? `${API_CONFIG.BASE_URL}/public/reviews/${userReview.id}`
+        : `${API_CONFIG.BASE_URL}/public/reviews`;
       
       const response = await fetch(url, {
         method,
@@ -97,7 +97,7 @@ const ProductReviewsContainer = ({ productId }) => {
 
   const handleDeleteReview = async (reviewId) => {
     try {
-      const response = await fetch(`http://localhost:8081/api/public/reviews/${reviewId}`, {
+      const response = await fetch(`${API_CONFIG.BASE_URL}/public/reviews/${reviewId}`, {
         method: "DELETE",
         credentials: 'include',
       });

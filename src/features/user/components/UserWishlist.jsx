@@ -1,6 +1,7 @@
 // features/user/components/UserWishlist.jsx
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
+import { API_CONFIG } from '../../../common/constants/config';
 
 const UserWishlist = () => {
   const [wishlist, setWishlist] = useState(null);
@@ -10,7 +11,7 @@ const UserWishlist = () => {
   const fetchWishlist = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8081/api/public/wishlist',{
+      const response = await fetch(`${API_CONFIG.BASE_URL}/public/wishlist`,{
         credentials: "include"
       });
       
@@ -37,7 +38,7 @@ const UserWishlist = () => {
 
   const handleRemoveItem = async (productId) => {
     try {
-      const response = await fetch(`http://localhost:8081/api/public/wishlist/remove/${productId}`, {
+      const response = await fetch(`${API_CONFIG.BASE_URL}/public/wishlist/remove/${productId}`, {
         method: 'DELETE',
         credentials: "include"
       });

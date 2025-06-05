@@ -6,6 +6,7 @@ import { PaymentStep } from "../components/PaymentStep";
 import { ReviewStep } from "../components/ReviewStep";
 import { toast } from "react-hot-toast";
 import { useCart } from "../../../common/contexts/CartContext";
+import { API_CONFIG } from "../../../common/constants/config";
 const STEPS = ["Address", "Payment", "Review"];
 
 export const CheckoutPage = () => {
@@ -20,7 +21,7 @@ export const CheckoutPage = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:8081/api/order/users/payments/${paymentData.pgName}`,
+        `${API_CONFIG.BASE_URL}/order/users/payments/${paymentData.pgName}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
