@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 
 import NavBar from "./common/components/layout/NavBar.jsx";
-import HomePage from "./pages/HomePage";
+import HomePage from "./features/home/pages/HomePage.jsx";
 import ProductsPage from "./features/products/pages/ProductsPage.jsx";
 
 import ProductDetailsPage from "./features/products/pages/ProductDetailsPage.jsx";
@@ -60,11 +60,9 @@ function App() {
           <Router>
             <Toaster />
             <NavBar />
-            <Routes>
-            <Route path="/" element={<HomePage />} />
-            </Routes>
             <div className="container mx-auto px-4">
               <Routes>
+                <Route path="/" element={<HomePage />} />
                 <Route
                   path="/products"
                   element={

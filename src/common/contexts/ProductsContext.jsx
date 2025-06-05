@@ -1,27 +1,45 @@
 // src/contexts/ProductsContext.js
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 // Creating the context
 const ProductsContext = createContext();
 
 // Create a Provider Component
 export const ProductsProvider = ({ children }) => {
-  const [view, setView] = useState("grid");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [pageNumber, setPageNumber] = useState(0);
+  const [pageNumber, setPageNumber] = useState(0); // Using 0-based indexing for API compatibility
+  const [totalPages, setTotalPages] = useState(1);
+
+  // Reset page number when filters change
+  const handleSearchQueryChange = (query) => {
+    setSearchQuery(query);
+    setPageNumber(0); // Reset to first page
+  };
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    setPageNumber(0); // Reset to first page
+  };
+
+  // Explicitly handle page changes with validation
+  const handlePageChange = (newPage) => {
+    if (newPage >= 0 && newPage < totalPages) {
+      setPageNumber(newPage);
+    }
+  };
 
   return (
     <ProductsContext.Provider
       value={{
-        view,
-        setView,
         searchQuery,
-        setSearchQuery,
+        setSearchQuery: handleSearchQueryChange,
         selectedCategory,
-        setSelectedCategory,
+        setSelectedCategory: handleCategoryChange,
         pageNumber,
-        setPageNumber,
+        setPageNumber: handlePageChange,
+        totalPages,
+        setTotalPages,
       }}
     >
       {children}

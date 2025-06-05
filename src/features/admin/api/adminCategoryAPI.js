@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:8081";
+import { API_CONFIG } from '../../../common/constants/config';
 
 const handleResponse = async (response) => {
   if (!response.ok) {
@@ -10,27 +10,25 @@ const handleResponse = async (response) => {
 
 export const adminCategoryAPI = {
   getCategories: async () => {
-    const response = await fetch(`${API_BASE}/api/public/categories`, {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/public/categories`, {
       credentials: "include",
     });
     return handleResponse(response);
   },
 
   createCategory: async (categoryData) => {
-    const response = await fetch(`${API_BASE}/api/public/categories`, {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/public/categories`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({categoryName : categoryData}),
       credentials: "include",
     });
-    console.log(categoryData)
     return handleResponse(response);
   },
 
   updateCategory: async (categoryId, categoryData) => {
-    console.log(categoryData)
     const response = await fetch(
-      `${API_BASE}/api/public/categories/${categoryId}`,
+      `${API_CONFIG.BASE_URL}/public/categories/${categoryId}`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -43,7 +41,7 @@ export const adminCategoryAPI = {
 
   deleteCategory: async (categoryId) => {
     const response = await fetch(
-      `${API_BASE}/api/public/categories/${categoryId}`,
+      `${API_CONFIG.BASE_URL}/public/categories/${categoryId}`,
       {
         method: "DELETE",
         credentials: "include",
@@ -54,7 +52,7 @@ export const adminCategoryAPI = {
 
   getCategoryProducts: async (categoryId) => {
     const response = await fetch(
-      `${API_BASE}/api/public/categories/${categoryId}/products`
+      `${API_CONFIG.BASE_URL}/public/categories/${categoryId}/products`
     );
     return handleResponse(response);
   },
