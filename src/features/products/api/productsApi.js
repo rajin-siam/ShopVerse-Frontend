@@ -1,3 +1,5 @@
+import { API_CONFIG } from '../../../common/constants/config';
+
 // Function to fetch all products
 export async function fetchAllProducts(
   pageNumber = 0,
@@ -5,7 +7,7 @@ export async function fetchAllProducts(
   sortBy = "productId",
   sortOrder = "asc"
 ) {
-  const url = `http://localhost:8081/api/public/products?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+  const url = `${API_CONFIG.BASE_URL}/public/products?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
   const response = await fetch(url);
 
   if (!response.ok) {
@@ -24,9 +26,8 @@ export async function fetchProductsByKeyword(
   sortBy = "productName",
   sortOrder = "desc"
 ) {
-  // In fetchProductsByKeyword function:
   const encodedKeyword = encodeURIComponent(keyword);
-  const url = `http://localhost:8081/api/public/products/keyword/${encodedKeyword}?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+  const url = `${API_CONFIG.BASE_URL}/public/products/keyword/${encodedKeyword}?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
   const response = await fetch(url);
 
   if (!response.ok) {
@@ -34,12 +35,8 @@ export async function fetchProductsByKeyword(
   }
 
   const data = await response.json();
-  console.log(data); // Log after data is fetched
-
   return data;
 }
-
-// productsApi.js
 
 export const fetchProductsByCategoryId = async (
   categoryId,
@@ -49,7 +46,7 @@ export const fetchProductsByCategoryId = async (
   sortOrder = "desc"
 ) => {
   try {
-    const url = `http://localhost:8081/api/public/categories/${categoryId}/products?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+    const url = `${API_CONFIG.BASE_URL}/public/categories/${categoryId}/products?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
 
     const response = await fetch(url);
 
@@ -58,18 +55,16 @@ export const fetchProductsByCategoryId = async (
     }
 
     const data = await response.json();
-    console.log(data);
-    return data; // assuming it returns a paginated structure: { content, totalPages, etc. }
+    return data;
   } catch (error) {
     console.error("Error fetching products by category:", error);
     throw error;
   }
 };
 
-
 // Function to fetch product details by ID
 export async function fetchProductById(productId) {
-  const url = `http://localhost:8081/api/public/products/${productId}`;
+  const url = `${API_CONFIG.BASE_URL}/public/products/${productId}`;
   const response = await fetch(url);
 
   if (!response.ok) {

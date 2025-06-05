@@ -1,7 +1,7 @@
-const API_BASE = "http://localhost:8081/api/carts";
+import { API_CONFIG } from '../../../common/constants/config';
 
 const apiClient = async (url, options = {}) => {
-  const response = await fetch(`${API_BASE}${url}`, {
+  const response = await fetch(`${API_CONFIG.BASE_URL}/carts${url}`, {
     credentials: "include",
     ...options,
   });

@@ -1,6 +1,8 @@
+import { API_CONFIG } from '../../../common/constants/config';
+
 export const loginUser = async (username, password) => {
   try {
-    const response = await fetch("http://localhost:8081/api/auth/signin", {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/auth/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
@@ -8,11 +10,11 @@ export const loginUser = async (username, password) => {
     });
 
     if (!response.ok) {
-      const errorData = await response.json(); // Parse error response
-      throw new Error(errorData.message || "Login failed"); // Use server-provided message
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Login failed");
     }
 
-    return await response.json(); // Return parsed data
+    return await response.json();
   } catch (err) {
     console.error("Login error:", err);
     throw new Error(err.message || "An unexpected error occurred");
@@ -20,7 +22,7 @@ export const loginUser = async (username, password) => {
 };
 
 export const signUpUser = async (userData) => {
-  const response = await fetch("http://localhost:8081/api/auth/signup", {
+  const response = await fetch(`${API_CONFIG.BASE_URL}/auth/signup`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -29,7 +31,7 @@ export const signUpUser = async (userData) => {
   });
 
   if (!response.ok) {
-    const error = await response.json(); // or response.json() if the server returns a JSON error
+    const error = await response.json();
     throw new Error(error.message || "Failed to Sign up");
   }
 
@@ -37,10 +39,9 @@ export const signUpUser = async (userData) => {
   return data;
 };
 
-
 export const signOutUser = async () => {
   try {
-    const response = await fetch("http://localhost:8081/api/auth/signout", {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/auth/signout`, {
       method: "POST",
       credentials: "include", 
     });
@@ -55,18 +56,11 @@ export const signOutUser = async () => {
     console.error("Logout error:", err);
     throw new Error(err.message || "Failed to disconnect session");
   }
-
-
-  
 };
-
-
-// Google Authentication API Function
-// Add this to your authApi.js file
 
 export const googleLogin = async (tokenId) => {
   try {
-    const response = await fetch("http://localhost:8081/api/auth/google", {
+    const response = await fetch(`${API_CONFIG.BASE_URL}/auth/google`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token: tokenId }),
