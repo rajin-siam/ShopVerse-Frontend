@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:8081/api";
+import { API_CONFIG } from '../../../common/constants/config';
 
 const defaultOptions = {
   credentials: "include",
@@ -47,13 +47,11 @@ const adminOrderApi = {
 
     try {
       const response = await fetch(
-        `${API_BASE_URL}/admin/orders${queryString}`,
+        `${API_CONFIG.BASE_URL}/admin/orders${queryString}`,
         defaultOptions
       );
       const data = await handleResponse(response);
 
-      console.log(data)
-      // Ensure these properties exist to prevent undefined errors
       return {
         orders: data.content || [],
         pagination: data.pagination || { pages: 1 },
@@ -67,7 +65,7 @@ const adminOrderApi = {
   getOrderDetails: async (orderId) => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/admin/order/${orderId}`,{
+        `${API_CONFIG.BASE_URL}/admin/order/${orderId}`,{
           credentials: 'include',
         }
       );
@@ -81,7 +79,7 @@ const adminOrderApi = {
   updateOrderStatus: async (orderId, newStatus) => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/admin/orders/${orderId}/status`,
+        `${API_CONFIG.BASE_URL}/admin/orders/${orderId}/status`,
         {
           ...defaultOptions,
           method: "PATCH",
@@ -98,7 +96,7 @@ const adminOrderApi = {
   updatePaymentStatus: async (orderId, newStatus) => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/admin/orders/${orderId}/payment`,
+        `${API_CONFIG.BASE_URL}/admin/orders/${orderId}/payment`,
         {
           ...defaultOptions,
           method: "PATCH",
@@ -115,11 +113,10 @@ const adminOrderApi = {
   getProducts: async () => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/public/products`,
+        `${API_CONFIG.BASE_URL}/public/products`,
         defaultOptions
       );
       const data = await handleResponse(response);
-      console.log(data)
 
       // Ensure the products property exists to prevent undefined errors
       return {

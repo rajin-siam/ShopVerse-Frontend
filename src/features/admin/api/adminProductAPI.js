@@ -1,4 +1,4 @@
-const API_BASE =  'http://localhost:8081';
+import { API_CONFIG } from '../../../common/constants/config';
 
 const handleResponse = async (response) => {
   if (!response.ok) {
@@ -11,7 +11,7 @@ const handleResponse = async (response) => {
 export const adminProductAPI = {
   getProducts: async (pageNumber = 0, pageSize = 5) => {
     const response = await fetch(
-      `${API_BASE}/api/public/products?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+      `${API_CONFIG.BASE_URL}/public/products?pageNumber=${pageNumber}&pageSize=${pageSize}`,
       {
         credentials: 'include',
       }
@@ -21,7 +21,7 @@ export const adminProductAPI = {
 
   createProduct: async (categoryId, productData) => {
     const response = await fetch(
-      `${API_BASE}/api/admin/categories/${categoryId}/product`,
+      `${API_CONFIG.BASE_URL}/admin/categories/${categoryId}/product`,
       {
         method: 'POST',
         headers: {
@@ -36,7 +36,7 @@ export const adminProductAPI = {
 
   updateProduct: async (productId, productData) => {
     const response = await fetch(
-      `${API_BASE}/api/admin/products/${productId}`,
+      `${API_CONFIG.BASE_URL}/admin/products/${productId}`,
       {
         method: 'PUT',
         headers: {
@@ -51,7 +51,7 @@ export const adminProductAPI = {
 
   deleteProduct: async (productId) => {
     const response = await fetch(
-      `${API_BASE}/api/admin/products/${productId}`,
+      `${API_CONFIG.BASE_URL}/admin/products/${productId}`,
       {
         method: 'DELETE',
         credentials: 'include',
@@ -65,7 +65,7 @@ export const adminProductAPI = {
     formData.append('image', imageFile);
 
     const response = await fetch(
-      `${API_BASE}/api/admin/products/${productId}/image`,
+      `${API_CONFIG.BASE_URL}/admin/products/${productId}/image`,
       {
         method: 'PUT',
         body: formData,
