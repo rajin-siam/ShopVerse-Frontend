@@ -18,10 +18,12 @@ export const useProductFetcher = () => {
   useEffect(() => {
     const loadProducts = async () => {
       setIsLoading(true);
-      try {
-        let data;
-        const { DEFAULT_PAGE_SIZE, SORT_BY, SORT_ORDER } = PAGINATION_CONFIG;
+      setError(null);
 
+      try {
+        const { DEFAULT_PAGE_SIZE, SORT_BY, SORT_ORDER } = PAGINATION_CONFIG;
+        let data;
+        // Choose API method based on filters
         if (searchQuery) {
           data = await fetchProductsByKeyword(
             searchQuery,
@@ -47,12 +49,14 @@ export const useProductFetcher = () => {
           );
         }
 
-        setProducts(data.content);
+        // Update state with API response data
+        setProducts(data.content || []);
         setTotalPages(data.totalPages || 1);
-        setError(null);
       } catch (err) {
-        setError(err.message);
-        console.error(err);
+        console.error("Error fetching products:", err);
+        setError(err.message || "Failed to load products");
+        setProducts([]);
+        setTotalPages(0);
       } finally {
         setIsLoading(false);
       }

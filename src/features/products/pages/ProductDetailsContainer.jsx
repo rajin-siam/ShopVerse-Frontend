@@ -1,10 +1,9 @@
 // Updated ProductDetailsContainer.jsx
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { fetchProductById } from "../api/productsApi";
-import { useCart } from "./../../../common/contexts/CartContext";
+import { useCart } from "../../../common/contexts/CartContext";
 
-// Import dumb components
+// Import components
 import Breadcrumb from "../components/ProductDetails/Breadcrumb";
 import LoadingSpinner from "../components/ProductDetails/LoadingSpinner";
 import ErrorDisplay from "../components/ProductDetails/ErrorDisplay";
@@ -21,46 +20,30 @@ const ProductDetailsContainer = ({ productId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const [visibleSections, setVisibleSections] = useState({
-    specifications: true,
-    description: true,
-    reviews: true,
-    showAll: true,
-  });
-
   const [isInWishlist, setIsInWishlist] = useState(false);
-  const [wishlistLoading, setWishlistLoading] = useState(false);
-
+  
   const { handleAddToCart } = useCart();
 
+  // Fetch product details
   useEffect(() => {
     const getProductDetails = async () => {
       try {
         setLoading(true);
         const productData = await fetchProductById(productId);
         setProduct(productData);
-        setError(null);
-      } catch (err) {
-        console.error("Error fetching product details:", err);
-        setError("Failed to load product details. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-      checkWishlistStatus();
-    };
-
-    const checkWishlistStatus = async () => {
-      try {
+        
+        // Check wishlist status
         const response = await fetch(
           `http://localhost:8081/api/public/wishlist/check/${productId}`,
-          {
-            credentials: "include",
-          }
+          { credentials: "include" }
         );
         const data = await response.json();
         setIsInWishlist(data.isInWishlist);
-      } catch (error) {
-        console.error("Error checking wishlist status:", error);
+      } catch (err) {
+        console.error("Error:", err);
+        setError("Failed to load product details. Please try again later.");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -69,93 +52,65 @@ const ProductDetailsContainer = ({ productId }) => {
     }
   }, [productId]);
 
+  // Handle wishlist toggle
   const toggleWishlist = async () => {
-    setWishlistLoading(true);
     try {
-      if (isInWishlist) {
-        await fetch(
-          `http://localhost:8081/api/public/wishlist/remove/${productId}`,
-          {
-            method: "DELETE",
-            credentials: "include",
-          }
-        );
-      } else {
-        await fetch(
-          `http://localhost:8081/api/public/wishlist/add/${productId}`,
-          {
-            method: "POST",
-            credentials: "include",
-          }
-        );
-      }
+      const endpoint = isInWishlist
+        ? `http://localhost:8081/api/public/wishlist/remove/${productId}`
+        : `http://localhost:8081/api/public/wishlist/add/${productId}`;
+      
+      const method = isInWishlist ? "DELETE" : "POST";
+      
+      await fetch(endpoint, {
+        method,
+        credentials: "include",
+      });
+      
       setIsInWishlist(!isInWishlist);
     } catch (error) {
       console.error("Error updating wishlist:", error);
-    } finally {
-      setWishlistLoading(false);
     }
   };
 
-  // Handlers
+  // Quantity handlers
   const handleQuantityChange = (e) => {
     const value = parseInt(e.target.value);
-    if (value > 0) {
-      setQuantity(value);
-    }
+    if (value > 0) setQuantity(value);
   };
 
-  const increaseQuantity = () => {
-    setQuantity(quantity + 1);
-  };
-
+  const increaseQuantity = () => setQuantity(quantity + 1);
+  
   const decreaseQuantity = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-    }
+    if (quantity > 1) setQuantity(quantity - 1);
   };
 
-  const addToCart = () => {
-    handleAddToCart(productId, quantity);
-  };
+  const addToCart = () => handleAddToCart(productId, quantity);
 
-  // Parse the description string that uses | as separators
-  const formatDescription = (description) => {
+  // Parse description points
+  const getDescriptionPoints = (description) => {
     if (!description) return [];
-    return description.split("|").filter((item) => item.trim().length > 0);
+    return description.split("|").filter(item => item.trim().length > 0);
   };
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
+  if (loading) return <LoadingSpinner />;
+  if (error) return <ErrorDisplay error={error} />;
+  if (!product) return <NotFoundDisplay />;
 
-  if (error) {
-    return <ErrorDisplay error={error} />;
-  }
-
-  if (!product) {
-    return <NotFoundDisplay />;
-  }
-
-  const descriptionPoints = formatDescription(product.description);
+  const descriptionPoints = getDescriptionPoints(product.description);
 
   return (
     <div className="bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Breadcrumb */}
         <Breadcrumb productName={product.productName} />
 
         <div className="bg-white rounded-xl shadow-md overflow-hidden">
-          {/* Product Layout */}
           <div className="md:flex">
-            {/* Left side: Product Image */}
             <ProductImageSection
               image={product.image}
               productName={product.productName}
               discount={product.discount}
             />
 
-            {/* Right side: Product Information */}
             <ProductInfoSection
               product={product}
               descriptionPoints={descriptionPoints}
@@ -175,22 +130,10 @@ const ProductDetailsContainer = ({ productId }) => {
             />
           </div>
 
-          {/* Product Details Content */}
           <div className="p-6">
-            {/* Specifications Section */}
-            {visibleSections.specifications && (
-              <ProductSpecifications product={product} />
-            )}
-
-            {/* Description Section */}
-            {visibleSections.description && (
-              <ProductDescription descriptionPoints={descriptionPoints} />
-            )}
-
-            {/* Reviews Section - Pass the product ID to the ProductReviews component */}
-            {visibleSections.reviews && (
-              <ProductReviews productId={productId} />
-            )}
+            <ProductSpecifications product={product} />
+            <ProductDescription descriptionPoints={descriptionPoints} />
+            <ProductReviews productId={productId} />
           </div>
         </div>
       </div>
